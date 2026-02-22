@@ -33,8 +33,15 @@ function BankTransferContent() {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ plan }),
         })
-            .then((r) => r.json())
+            .then((r) => {
+                if (r.status === 401) {
+                    window.location.href = `/auth/signin?callbackUrl=${encodeURIComponent(window.location.href)}`;
+                    return null;
+                }
+                return r.json();
+            })
             .then((data) => {
+                if (!data) return;
                 if (data.orderId) {
                     setBankInfo(data);
                     setStatus("waiting");
