@@ -6,7 +6,7 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-import AnnouncementBar from "@/components/layout/AnnouncementBar";
+
 import AuthProvider from "@/components/auth/AuthProvider";
 
 const inter = Inter({
@@ -62,7 +62,7 @@ export default async function LocaleLayout({
                 <ThemeProvider>
                     <NextIntlClientProvider messages={messages}>
                         <AuthProvider>
-                            <AnnouncementBar />
+
                             <Navbar />
                             <main>{children}</main>
                             <Footer />

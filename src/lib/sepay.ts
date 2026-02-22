@@ -1,9 +1,9 @@
 import { PLANS, PlanId } from "./stripe";
 
 export const SEPAY_CONFIG = {
-    bankName: "MB Bank",
-    bankBin: "970422",
-    accountNumber: "0987654321",
+    bankName: "BIDV",
+    bankBin: "970418",
+    accountNumber: "2152320541",
     accountHolder: "NGUYEN VIET CHIEN",
     qrTemplate: "https://img.vietqr.io/image",
 };
