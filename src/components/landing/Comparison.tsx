@@ -9,7 +9,7 @@ const rowVariant = {
     visible: (i: number) => ({
         opacity: 1,
         x: 0,
-        transition: { delay: i * 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+        transition: { delay: i * 0.1, duration: 0.4, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
     }),
 };
 
@@ -50,8 +50,8 @@ export default function Comparison() {
                                     <th
                                         key={i}
                                         className={`py-4 px-6 text-sm font-semibold ${i === headers.length - 1
-                                                ? "text-accent"
-                                                : "text-text-primary"
+                                            ? "text-accent"
+                                            : "text-text-primary"
                                             }`}
                                     >
                                         <span className="flex items-center gap-2">
@@ -79,10 +79,10 @@ export default function Comparison() {
                                         <td
                                             key={j}
                                             className={`py-4 px-6 text-sm ${j === 0
-                                                    ? "text-text-primary font-medium"
-                                                    : j === row.length - 1
-                                                        ? "text-accent font-semibold"
-                                                        : "text-text-secondary"
+                                                ? "text-text-primary font-medium"
+                                                : j === row.length - 1
+                                                    ? "text-accent font-semibold"
+                                                    : "text-text-secondary"
                                                 }`}
                                         >
                                             <span className="flex items-center gap-2">

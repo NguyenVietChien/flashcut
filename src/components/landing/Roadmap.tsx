@@ -58,10 +58,10 @@ export default function Roadmap() {
                                     initial={{ opacity: 0, x: i % 2 === 0 ? -40 : 40 }}
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ delay: i * 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+                                    transition={{ delay: i * 0.2, duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
                                     className={`relative flex items-start gap-6 md:gap-12 ${i % 2 === 0
-                                            ? "md:flex-row"
-                                            : "md:flex-row-reverse md:text-right"
+                                        ? "md:flex-row"
+                                        : "md:flex-row-reverse md:text-right"
                                         }`}
                                 >
                                     {/* Animated Dot */}
