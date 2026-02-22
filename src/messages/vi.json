@@ -1,0 +1,456 @@
+{
+    "announcement": {
+        "text": "🎉 Mới: Hỗ trợ thanh toán chuyển khoản tự động!",
+        "cta": "Mua ngay →",
+        "link": "/#pricing"
+    },
+    "nav": {
+        "features": "Tính năng",
+        "pricing": "Bảng giá",
+        "blog": "Blog",
+        "contact": "Liên hệ",
+        "signin": "Đăng nhập",
+        "tryFree": "Dùng Thử Ngay",
+        "signIn": "Đăng nhập",
+        "signOut": "Đăng xuất",
+        "profile": "Hồ sơ"
+    },
+    "hero": {
+        "badge": "AI-Powered Video Editor",
+        "title": "Biến Ý Tưởng Thành Video Trong 2 Phút",
+        "subtitle": "AI tự động tạo video CapCut chuyên nghiệp từ văn bản. Nhanh gấp 60x so với edit tay truyền thống.",
+        "cta": "Dùng Thử Ngay",
+        "demo": "Xem Demo",
+        "stats": {
+            "features": "50+ Tính năng",
+            "models": "10 AI Models",
+            "videos": "100+ Video/ngày",
+            "users": "5,000+ Nhà sáng tạo"
+        }
+    },
+    "painPoints": {
+        "title": "Vấn Đề Bạn Đang Gặp",
+        "subtitle": "Bạn không đơn độc. Hàng nghìn creator đang mắc kẹt với quy trình cũ.",
+        "items": [
+            {
+                "title": "Chậm & Tốn Thời Gian",
+                "description": "Edit tay một video mất 2-3 tiếng. Muốn sản xuất hàng loạt? Bất khả thi."
+            },
+            {
+                "title": "Lặp Đi Lặp Lại",
+                "description": "Cùng một quy trình: cắt ghép, chèn nhạc, thêm text, xuất file. Lặp đến phát điên."
+            },
+            {
+                "title": "Tốn Tiền Thuê Editor",
+                "description": "Thuê freelancer: 500K-2M/video. Muốn 100 video/ngày? Ngân sách vỡ trận."
+            }
+        ]
+    },
+    "partners": {
+        "label": "Được hỗ trợ bởi",
+        "title": "Đối Tác AI Hàng Đầu"
+    },
+    "features": {
+        "title": "Tính Năng Vượt Trội",
+        "subtitle": "Hơn 50 tính năng chuyên nghiệp, từ biên tập cơ bản đến AI Agent thông minh.",
+        "pillars": [
+            {
+                "title": "Core Engine",
+                "description": "Thao tác trực tiếp vào JSON CapCut",
+                "items": [
+                    "CapCut Project Builder V3",
+                    "Image, Video, Audio, Text Builder",
+                    "Effect, Filter, Transition",
+                    "Keyframe Animation System"
+                ]
+            },
+            {
+                "title": "AI Intelligence",
+                "description": "Điều phối các bộ não AI hàng đầu",
+                "items": [
+                    "Multi-AI: Gemini, GPT, Claude, Groq",
+                    "AI Agent Chat — điều khiển bằng chat",
+                    "10 AI Tools, 95.5% accuracy",
+                    "MCP Server cho Cursor/Claude"
+                ]
+            },
+            {
+                "title": "Studio Pipeline",
+                "description": "Quy trình khép kín: Ý tưởng → Video",
+                "items": [
+                    "Voice Hub (ElevenLabs, Deepgram)",
+                    "Image Hub (Midjourney, Flux, Whisk)",
+                    "Auto SFX & Subtitle",
+                    "Pipeline Templates tái sử dụng"
+                ]
+            }
+        ]
+    },
+    "howItWorks": {
+        "title": "Cách Hoạt Động",
+        "subtitle": "3 bước đơn giản, từ ý tưởng đến video hoàn chỉnh.",
+        "steps": [
+            {
+                "title": "Nhập Kịch Bản",
+                "description": "Paste script hoặc để AI tự viết từ ý tưởng của bạn."
+            },
+            {
+                "title": "AI Xử Lý",
+                "description": "AI tạo ảnh, voice, SFX, subtitle và lắp ghép tự động."
+            },
+            {
+                "title": "Xuất CapCut",
+                "description": "Mở CapCut → project hoàn chỉnh sẵn sàng export."
+            }
+        ]
+    },
+    "comparison": {
+        "title": "Tại Sao Chọn FlashCut?",
+        "subtitle": "So sánh trực tiếp với các phương pháp khác.",
+        "headers": [
+            "Tính năng",
+            "Edit Tay",
+            "AutomationMMO",
+            "FlashCut"
+        ],
+        "rows": [
+            [
+                "Tốc độ",
+                "2 tiếng/video",
+                "15 phút/video",
+                "2 phút/video"
+            ],
+            [
+                "Nguồn Media",
+                "Tự tìm kiếm",
+                "Phải có sẵn",
+                "AI tạo tự động"
+            ],
+            [
+                "Giao diện",
+                "CapCut UI",
+                "Form nhập liệu",
+                "Timeline + AI Chat"
+            ],
+            [
+                "AI Agent",
+                "Không có",
+                "Không có",
+                "Chat điều khiển"
+            ],
+            [
+                "Giá",
+                "Free (nhưng tốn thời gian)",
+                "350K/tháng",
+                "Từ 350K/tháng"
+            ]
+        ]
+    },
+    "pricing": {
+        "title": "Bảng Giá",
+        "subtitle": "Chọn gói phù hợp với quy mô sản xuất của bạn.",
+        "monthly": "Tháng",
+        "yearly": "Năm",
+        "popular": "Phổ biến nhất",
+        "currency": "đ",
+        "period": "/tháng",
+        "plans": [
+            {
+                "name": "BASIC",
+                "emoji": "🥉",
+                "price": "400,000",
+                "tagline": "Cho người mới bắt đầu",
+                "cta": "Bắt Đầu",
+                "features": [
+                    "Core Builder (Video/Text/Audio)",
+                    "Auto-Sync Media Folder",
+                    "Image Sort (pattern 1,2,3...)",
+                    "Multi-Audio Import",
+                    "Manual AI (BYOK)"
+                ]
+            },
+            {
+                "name": "PRO",
+                "emoji": "🥈",
+                "price": "700,000",
+                "tagline": "Cho nhà sáng tạo chuyên nghiệp",
+                "cta": "Nâng Cấp Ngay",
+                "features": [
+                    "Tất cả tính năng Basic",
+                    "Batch Automation (Filter/Effect)",
+                    "Pipeline Templates",
+                    "Advanced Transcription (Deepgram)",
+                    "Smart Insert SFX (AI)",
+                    "Text Style & Keyframe Presets",
+                    "Budget Guard (API Cost Control)",
+                    "Chat Tab + Image Paste"
+                ]
+            },
+            {
+                "name": "ULTRA",
+                "emoji": "🥇",
+                "price": "1,200,000",
+                "tagline": "Studio khép kín — Đạo diễn AI",
+                "cta": "Liên Hệ",
+                "features": [
+                    "Tất cả tính năng Pro",
+                    "AI Agent Editing (Chat to Edit)",
+                    "Closed-loop Studio (MJ/Flux)",
+                    "Multi-Project Auto v7.0",
+                    "Batch Variation (A/B Testing)",
+                    "Auto Render/Export Video",
+                    "n8n Integration (Webhook)",
+                    "Screenshot-to-Video",
+                    "Web-to-Video",
+                    "Hỗ trợ ưu tiên 24/7"
+                ]
+            }
+        ]
+    },
+    "testimonials": {
+        "title": "Người Dùng Nói Gì?",
+        "subtitle": "Đánh giá từ các nhà sáng tạo nội dung.",
+        "items": [
+            {
+                "name": "Nguyễn Văn A",
+                "role": "MMO Creator",
+                "quote": "Trước mất 3 tiếng cho 1 video. Giờ FlashCut làm 50 video trong 5 phút. ROI cực kỳ cao."
+            },
+            {
+                "name": "Trần Thị B",
+                "role": "Agency Owner",
+                "quote": "Tiết kiệm 80% chi phí thuê editor. Team tôi giờ chỉ cần review và publish."
+            },
+            {
+                "name": "Lê Văn C",
+                "role": "Content Creator",
+                "quote": "AI Agent thông minh đến mức tôi chỉ cần chat 'thêm hiệu ứng rung theo nhạc' là xong."
+            }
+        ]
+    },
+    "roadmap": {
+        "title": "Lộ Trình Phát Triển",
+        "subtitle": "Liên tục cải tiến, hướng tới nền tảng toàn cầu.",
+        "phases": [
+            {
+                "title": "Giai đoạn 1",
+                "period": "Tháng 1-3",
+                "description": "Thống trị thị trường MMO Việt Nam. Launch Basic & Pro."
+            },
+            {
+                "title": "Giai đoạn 2",
+                "period": "Tháng 4-8",
+                "description": "Tiến ra Global. Product Hunt, AppSumo. 100 khách quốc tế."
+            },
+            {
+                "title": "Giai đoạn 3",
+                "period": "Tháng 9-18",
+                "description": "Mô hình B2B. Marketing Agency solutions. MRR $100K."
+            }
+        ]
+    },
+    "cta": {
+        "title": "Sẵn Sàng Tạo Video Nhanh Gấp 60x?",
+        "subtitle": "Đăng ký Early Bird — Giảm 20% cho 50 khách hàng đầu tiên.",
+        "primary": "Đăng Ký Ngay",
+        "secondary": "Liên Hệ Tư Vấn"
+    },
+    "footer": {
+        "description": "Nền tảng AI Video Automation hàng đầu cho CapCut.",
+        "product": {
+            "title": "Sản phẩm",
+            "features": "Tính năng",
+            "pricing": "Bảng giá",
+            "download": "Tải về"
+        },
+        "support": {
+            "title": "Hỗ trợ",
+            "contact": "Liên hệ"
+        },
+        "resources": {
+            "title": "Tài nguyên"
+        },
+        "legal": {
+            "title": "Pháp lý",
+            "terms": "Điều khoản",
+            "privacy": "Bảo mật"
+        },
+        "copyright": "© 2026 FlashCut.ai. All rights reserved."
+    },
+    "blog": {
+        "title": "Blog",
+        "subtitle": "Tin tức, hướng dẫn và mẹo hay từ đội ngũ FlashCut.ai",
+        "readMore": "Đọc thêm",
+        "backToList": "Quay lại Blog",
+        "minRead": "phút đọc",
+        "noPosts": "Chưa có bài viết nào.",
+        "relatedPosts": "Bài viết liên quan"
+    },
+    "auth": {
+        "signInTitle": "Đăng Nhập",
+        "signInSubtitle": "Chào mừng bạn trở lại FlashCut.ai",
+        "signUpTitle": "Tạo Tài Khoản",
+        "signUpSubtitle": "Bắt đầu tạo video AI ngay hôm nay",
+        "email": "Email",
+        "password": "Mật khẩu",
+        "name": "Họ tên",
+        "namePlaceholder": "Nguyễn Văn A",
+        "signIn": "Đăng Nhập",
+        "signUp": "Đăng Ký",
+        "continueWithGoogle": "Tiếp tục với Google",
+        "or": "hoặc",
+        "noAccount": "Chưa có tài khoản?",
+        "hasAccount": "Đã có tài khoản?",
+        "signUpLink": "Đăng ký ngay",
+        "signInLink": "Đăng nhập",
+        "invalidCredentials": "Email hoặc mật khẩu không đúng",
+        "registrationFailed": "Đăng ký thất bại, vui lòng thử lại",
+        "signInAfterRegisterFailed": "Đăng ký thành công nhưng đăng nhập thất bại"
+    },
+    "dashboard": {
+        "welcome": "Xin chào",
+        "subtitle": "Quản lý dự án video AI của bạn",
+        "projects": "Dự án",
+        "videos": "Video",
+        "views": "Đơn hàng",
+        "plan": "Gói",
+        "signOut": "Đăng xuất",
+        "getStarted": "Bắt đầu tạo video đầu tiên",
+        "getStartedDesc": "Sử dụng AI để tạo video CapCut chuyên nghiệp chỉ trong vài phút.",
+        "createProject": "Tạo Dự Án Mới",
+        "licenseTitle": "License Của Bạn",
+        "licenseKey": "Mã license",
+        "expiresAt": "Hết hạn",
+        "active": "Đang hoạt động",
+        "expired": "Đã hết hạn"
+    },
+    "checkoutSuccess": {
+        "title": "Thanh Toán Thành Công!",
+        "subtitle": "Cảm ơn bạn đã mua license FlashCut.",
+        "licenseKey": "Mã License",
+        "plan": "Gói",
+        "expires": "Hết hạn",
+        "dashboard": "Đến Dashboard",
+        "download": "Tải Ứng Dụng"
+    },
+    "bankTransfer": {
+        "title": "Thanh Toán Chuyển Khoản",
+        "loading": "Đang tạo đơn hàng...",
+        "scanQr": "Quét mã QR để thanh toán",
+        "bank": "Ngân hàng",
+        "accountNumber": "Số tài khoản",
+        "accountHolder": "Chủ tài khoản",
+        "amount": "Số tiền",
+        "content": "Nội dung CK",
+        "important": "Quan trọng",
+        "contentWarning": "Vui lòng nhập chính xác nội dung chuyển khoản để hệ thống tự động xác nhận.",
+        "waiting": "Đang chờ thanh toán...",
+        "successTitle": "Thanh Toán Thành Công!",
+        "successSubtitle": "License của bạn đã được kích hoạt.",
+        "licenseKey": "Mã License",
+        "plan": "Gói",
+        "expires": "Hết hạn",
+        "dashboard": "Đến Dashboard",
+        "download": "Tải Ứng Dụng",
+        "back": "Quay lại"
+    },
+    "download": {
+        "title": "Tải FlashCut AutoCapcut",
+        "subtitle": "Công cụ tự động hóa video CapCut mạnh nhất. Cài đặt trong 2 phút, bắt đầu tạo video ngay.",
+        "cta": "Tải Về Miễn Phí",
+        "free": "Miễn phí dùng thử",
+        "requirements": "Yêu Cầu Hệ Thống",
+        "included": "Tính Năng Đi Kèm",
+        "req": {
+            "os": "Hệ điều hành",
+            "cpu": "Vi xử lý",
+            "ram": "RAM",
+            "disk": "Dung lượng"
+        },
+        "feat": {
+            "auto": "Tự động tạo project CapCut từ script",
+            "batch": "Batch xử lý hàng loạt media",
+            "effects": "Hiệu ứng, chuyển cảnh, filter tự động",
+            "audio": "Đồng bộ audio & subtitle",
+            "templates": "Thư viện template sẵn có",
+            "updates": "Cập nhật miễn phí trọn đời"
+        }
+    },
+    "privacy": {
+        "title": "Chính Sách Bảo Mật",
+        "lastUpdated": "Cập nhật lần cuối: 22/02/2026",
+        "intro": "FlashCut.ai cam kết bảo vệ quyền riêng tư của bạn. Chính sách này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn.",
+        "dataCollection": {
+            "title": "Thu Thập Dữ Liệu",
+            "content": "Chúng tôi thu thập thông tin bạn cung cấp khi tạo tài khoản (tên, email) và dữ liệu sử dụng dịch vụ (nhật ký hoạt động, thiết bị). Chúng tôi không thu thập dữ liệu video hoặc nội dung sáng tạo của bạn."
+        },
+        "cookies": {
+            "title": "Cookie",
+            "content": "Chúng tôi sử dụng cookie cần thiết để duy trì phiên đăng nhập và cookie phân tích để cải thiện trải nghiệm. Bạn có thể tắt cookie trong cài đặt trình duyệt."
+        },
+        "thirdParty": {
+            "title": "Dịch Vụ Bên Thứ Ba",
+            "content": "Chúng tôi sử dụng Google OAuth để đăng nhập. Khi bạn đăng nhập bằng Google, chúng tôi chỉ nhận tên và email từ Google, không truy cập dữ liệu khác."
+        },
+        "security": {
+            "title": "Bảo Mật",
+            "content": "Mật khẩu được mã hóa bằng bcrypt. Dữ liệu truyền tải qua HTTPS. Chúng tôi thường xuyên cập nhật các biện pháp bảo mật."
+        },
+        "rights": {
+            "title": "Quyền Của Bạn",
+            "content": "Bạn có quyền truy cập, sửa đổi hoặc xóa dữ liệu cá nhân. Liên hệ support@flashcut.ai để yêu cầu."
+        },
+        "changes": {
+            "title": "Thay Đổi Chính Sách",
+            "content": "Chúng tôi có thể cập nhật chính sách này. Mọi thay đổi quan trọng sẽ được thông báo qua email hoặc trên website."
+        }
+    },
+    "terms": {
+        "title": "Điều Khoản Dịch Vụ",
+        "lastUpdated": "Cập nhật lần cuối: 22/02/2026",
+        "intro": "Bằng việc sử dụng FlashCut.ai và AutoCapcut, bạn đồng ý tuân thủ các điều khoản dưới đây.",
+        "usage": {
+            "title": "Sử Dụng Dịch Vụ",
+            "content": "FlashCut.ai cung cấp công cụ tự động hóa video cho CapCut. Bạn phải từ 18 tuổi trở lên để sử dụng dịch vụ. Bạn chịu trách nhiệm về nội dung tạo ra bằng công cụ của chúng tôi."
+        },
+        "license": {
+            "title": "Giấy Phép",
+            "content": "Khi mua license, bạn được cấp quyền sử dụng phần mềm không độc quyền, không chuyển nhượng. License gắn với một thiết bị duy nhất."
+        },
+        "restrictions": {
+            "title": "Hạn Chế",
+            "content": "Bạn không được phân phối lại, sao chép, reverse-engineer phần mềm. Không sử dụng để tạo nội dung vi phạm pháp luật hoặc bản quyền."
+        },
+        "payment": {
+            "title": "Thanh Toán",
+            "content": "Thanh toán qua chuyển khoản ngân hàng hoặc ví điện tử. License được kích hoạt sau khi xác nhận thanh toán. Không hoàn tiền sau 7 ngày kể từ ngày mua."
+        },
+        "liability": {
+            "title": "Giới Hạn Trách Nhiệm",
+            "content": "FlashCut.ai không chịu trách nhiệm cho thiệt hại gián tiếp phát sinh từ việc sử dụng dịch vụ. Dịch vụ được cung cấp \"nguyên trạng\" (as-is)."
+        },
+        "termination": {
+            "title": "Chấm Dứt",
+            "content": "Chúng tôi có quyền chấm dứt tài khoản nếu bạn vi phạm điều khoản. Bạn cũng có thể yêu cầu xóa tài khoản bất cứ lúc nào."
+        },
+        "changes": {
+            "title": "Thay Đổi Điều Khoản",
+            "content": "Điều khoản có thể được cập nhật. Việc tiếp tục sử dụng dịch vụ sau khi thay đổi đồng nghĩa với việc bạn chấp nhận điều khoản mới."
+        }
+    },
+    "contact": {
+        "title": "Liên Hệ",
+        "subtitle": "Có câu hỏi hoặc cần hỗ trợ? Gửi tin nhắn cho chúng tôi.",
+        "name": "Họ tên",
+        "namePlaceholder": "Nguyễn Văn A",
+        "email": "Email",
+        "subject": "Chủ đề",
+        "subjectPlaceholder": "Hỗ trợ kỹ thuật / Mua license / Góp ý",
+        "message": "Nội dung",
+        "messagePlaceholder": "Mô tả chi tiết vấn đề hoặc câu hỏi của bạn...",
+        "send": "Gửi Tin Nhắn",
+        "error": "Có lỗi xảy ra, vui lòng thử lại",
+        "successTitle": "Đã Gửi Thành Công!",
+        "successMessage": "Chúng tôi sẽ phản hồi trong vòng 24 giờ."
+    }
+}

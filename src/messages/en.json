@@ -1,0 +1,456 @@
+{
+    "announcement": {
+        "text": "🎉 New: Automatic bank transfer payments now available!",
+        "cta": "Buy now →",
+        "link": "/#pricing"
+    },
+    "nav": {
+        "features": "Features",
+        "pricing": "Pricing",
+        "blog": "Blog",
+        "contact": "Contact",
+        "signin": "Sign In",
+        "tryFree": "Try Free",
+        "signIn": "Sign In",
+        "signOut": "Sign Out",
+        "profile": "Profile"
+    },
+    "hero": {
+        "badge": "AI-Powered Video Editor",
+        "title": "Turn Ideas Into Videos In 2 Minutes",
+        "subtitle": "AI automatically creates professional CapCut videos from text. 60x faster than manual editing.",
+        "cta": "Try Free",
+        "demo": "Watch Demo",
+        "stats": {
+            "features": "50+ Features",
+            "models": "10 AI Models",
+            "videos": "100+ Videos/day",
+            "users": "5,000+ Creators"
+        }
+    },
+    "painPoints": {
+        "title": "Problems You're Facing",
+        "subtitle": "You're not alone. Thousands of creators are stuck with outdated workflows.",
+        "items": [
+            {
+                "title": "Slow & Time-Consuming",
+                "description": "Manual editing takes 2-3 hours per video. Mass production? Impossible."
+            },
+            {
+                "title": "Repetitive & Boring",
+                "description": "Same process: cut, add music, insert text, export. Repeat endlessly."
+            },
+            {
+                "title": "Expensive Editors",
+                "description": "Freelancers: $20-80/video. Want 100 videos/day? Budget explosion."
+            }
+        ]
+    },
+    "partners": {
+        "label": "Powered by",
+        "title": "World-Class AI Partners"
+    },
+    "features": {
+        "title": "Powerful Features",
+        "subtitle": "50+ professional features, from basic editing to intelligent AI Agents.",
+        "pillars": [
+            {
+                "title": "Core Engine",
+                "description": "Direct manipulation of CapCut JSON",
+                "items": [
+                    "CapCut Project Builder V3",
+                    "Image, Video, Audio, Text Builder",
+                    "Effect, Filter, Transition",
+                    "Keyframe Animation System"
+                ]
+            },
+            {
+                "title": "AI Intelligence",
+                "description": "Orchestrate top AI models",
+                "items": [
+                    "Multi-AI: Gemini, GPT, Claude, Groq",
+                    "AI Agent Chat — control by chat",
+                    "10 AI Tools, 95.5% accuracy",
+                    "MCP Server for Cursor/Claude"
+                ]
+            },
+            {
+                "title": "Studio Pipeline",
+                "description": "End-to-end: Idea → Video",
+                "items": [
+                    "Voice Hub (ElevenLabs, Deepgram)",
+                    "Image Hub (Midjourney, Flux, Whisk)",
+                    "Auto SFX & Subtitle",
+                    "Reusable Pipeline Templates"
+                ]
+            }
+        ]
+    },
+    "howItWorks": {
+        "title": "How It Works",
+        "subtitle": "3 simple steps, from idea to finished video.",
+        "steps": [
+            {
+                "title": "Input Script",
+                "description": "Paste your script or let AI write one from your idea."
+            },
+            {
+                "title": "AI Processing",
+                "description": "AI generates images, voice, SFX, subtitles and assembles automatically."
+            },
+            {
+                "title": "Export to CapCut",
+                "description": "Open CapCut → complete project ready to export."
+            }
+        ]
+    },
+    "comparison": {
+        "title": "Why Choose FlashCut?",
+        "subtitle": "Direct comparison with other methods.",
+        "headers": [
+            "Feature",
+            "Manual Edit",
+            "AutomationMMO",
+            "FlashCut"
+        ],
+        "rows": [
+            [
+                "Speed",
+                "2 hours/video",
+                "15 min/video",
+                "2 min/video"
+            ],
+            [
+                "Media Source",
+                "Search yourself",
+                "Must have ready",
+                "AI auto-generated"
+            ],
+            [
+                "Interface",
+                "CapCut UI",
+                "Input forms",
+                "Timeline + AI Chat"
+            ],
+            [
+                "AI Agent",
+                "None",
+                "None",
+                "Chat control"
+            ],
+            [
+                "Price",
+                "Free (but time-costly)",
+                "$15/month",
+                "From $15/month"
+            ]
+        ]
+    },
+    "pricing": {
+        "title": "Pricing",
+        "subtitle": "Choose the plan that fits your production scale.",
+        "monthly": "Monthly",
+        "yearly": "Yearly",
+        "popular": "Most Popular",
+        "currency": "$",
+        "period": "/month",
+        "plans": [
+            {
+                "name": "BASIC",
+                "emoji": "🥉",
+                "price": "16",
+                "tagline": "For beginners",
+                "cta": "Get Started",
+                "features": [
+                    "Core Builder (Video/Text/Audio)",
+                    "Auto-Sync Media Folder",
+                    "Image Sort (pattern 1,2,3...)",
+                    "Multi-Audio Import",
+                    "Manual AI (BYOK)"
+                ]
+            },
+            {
+                "name": "PRO",
+                "emoji": "🥈",
+                "price": "29",
+                "tagline": "For professional creators",
+                "cta": "Upgrade Now",
+                "features": [
+                    "Everything in Basic",
+                    "Batch Automation (Filter/Effect)",
+                    "Pipeline Templates",
+                    "Advanced Transcription (Deepgram)",
+                    "Smart Insert SFX (AI)",
+                    "Text Style & Keyframe Presets",
+                    "Budget Guard (API Cost Control)",
+                    "Chat Tab + Image Paste"
+                ]
+            },
+            {
+                "name": "ULTRA",
+                "emoji": "🥇",
+                "price": "49",
+                "tagline": "All-in-one AI Director Studio",
+                "cta": "Contact Us",
+                "features": [
+                    "Everything in Pro",
+                    "AI Agent Editing (Chat to Edit)",
+                    "Closed-loop Studio (MJ/Flux)",
+                    "Multi-Project Auto v7.0",
+                    "Batch Variation (A/B Testing)",
+                    "Auto Render/Export Video",
+                    "n8n Integration (Webhook)",
+                    "Screenshot-to-Video",
+                    "Web-to-Video",
+                    "24/7 Priority Support"
+                ]
+            }
+        ]
+    },
+    "testimonials": {
+        "title": "What Users Say",
+        "subtitle": "Reviews from content creators.",
+        "items": [
+            {
+                "name": "Alex M.",
+                "role": "Content Creator",
+                "quote": "Used to spend 3 hours per video. Now FlashCut makes 50 videos in 5 minutes. Incredible ROI."
+            },
+            {
+                "name": "Sarah K.",
+                "role": "Agency Owner",
+                "quote": "Saved 80% on editor costs. My team now just reviews and publishes."
+            },
+            {
+                "name": "David L.",
+                "role": "TikTok Creator",
+                "quote": "The AI Agent is so smart, I just type 'add shake effect to the beat' and it's done."
+            }
+        ]
+    },
+    "roadmap": {
+        "title": "Development Roadmap",
+        "subtitle": "Continuous improvement towards a global platform.",
+        "phases": [
+            {
+                "title": "Phase 1",
+                "period": "Month 1-3",
+                "description": "Dominate Vietnam MMO market. Launch Basic & Pro."
+            },
+            {
+                "title": "Phase 2",
+                "period": "Month 4-8",
+                "description": "Go Global. Product Hunt, AppSumo. First 100 international users."
+            },
+            {
+                "title": "Phase 3",
+                "period": "Month 9-18",
+                "description": "B2B model. Marketing Agency solutions. $100K MRR."
+            }
+        ]
+    },
+    "cta": {
+        "title": "Ready to Create Videos 60x Faster?",
+        "subtitle": "Sign up Early Bird — 20% off for the first 50 customers.",
+        "primary": "Sign Up Now",
+        "secondary": "Contact Sales"
+    },
+    "footer": {
+        "description": "The leading AI Video Automation platform for CapCut.",
+        "product": {
+            "title": "Product",
+            "features": "Features",
+            "pricing": "Pricing",
+            "download": "Download"
+        },
+        "support": {
+            "title": "Support",
+            "contact": "Contact"
+        },
+        "resources": {
+            "title": "Resources"
+        },
+        "legal": {
+            "title": "Legal",
+            "terms": "Terms",
+            "privacy": "Privacy"
+        },
+        "copyright": "© 2026 FlashCut.ai. All rights reserved."
+    },
+    "blog": {
+        "title": "Blog",
+        "subtitle": "News, tutorials, and tips from the FlashCut.ai team",
+        "readMore": "Read more",
+        "backToList": "Back to Blog",
+        "minRead": "min read",
+        "noPosts": "No posts yet.",
+        "relatedPosts": "Related Posts"
+    },
+    "auth": {
+        "signInTitle": "Sign In",
+        "signInSubtitle": "Welcome back to FlashCut.ai",
+        "signUpTitle": "Create Account",
+        "signUpSubtitle": "Start creating AI videos today",
+        "email": "Email",
+        "password": "Password",
+        "name": "Full Name",
+        "namePlaceholder": "John Doe",
+        "signIn": "Sign In",
+        "signUp": "Sign Up",
+        "continueWithGoogle": "Continue with Google",
+        "or": "or",
+        "noAccount": "Don't have an account?",
+        "hasAccount": "Already have an account?",
+        "signUpLink": "Sign up now",
+        "signInLink": "Sign in",
+        "invalidCredentials": "Invalid email or password",
+        "registrationFailed": "Registration failed, please try again",
+        "signInAfterRegisterFailed": "Registration successful but sign in failed"
+    },
+    "dashboard": {
+        "welcome": "Hello",
+        "subtitle": "Manage your AI video projects",
+        "projects": "Projects",
+        "videos": "Videos",
+        "views": "Orders",
+        "plan": "Plan",
+        "signOut": "Sign Out",
+        "getStarted": "Create your first video",
+        "getStartedDesc": "Use AI to create professional CapCut videos in just minutes.",
+        "createProject": "Create New Project",
+        "licenseTitle": "Your License",
+        "licenseKey": "License Key",
+        "expiresAt": "Expires",
+        "active": "Active",
+        "expired": "Expired"
+    },
+    "checkoutSuccess": {
+        "title": "Payment Successful!",
+        "subtitle": "Thank you for purchasing a FlashCut license.",
+        "licenseKey": "License Key",
+        "plan": "Plan",
+        "expires": "Expires",
+        "dashboard": "Go to Dashboard",
+        "download": "Download App"
+    },
+    "bankTransfer": {
+        "title": "Bank Transfer Payment",
+        "loading": "Creating order...",
+        "scanQr": "Scan QR code to pay",
+        "bank": "Bank",
+        "accountNumber": "Account Number",
+        "accountHolder": "Account Holder",
+        "amount": "Amount",
+        "content": "Transfer Content",
+        "important": "Important",
+        "contentWarning": "Please enter the exact transfer content so the system can automatically confirm your payment.",
+        "waiting": "Waiting for payment...",
+        "successTitle": "Payment Successful!",
+        "successSubtitle": "Your license has been activated.",
+        "licenseKey": "License Key",
+        "plan": "Plan",
+        "expires": "Expires",
+        "dashboard": "Go to Dashboard",
+        "download": "Download App",
+        "back": "Go back"
+    },
+    "download": {
+        "title": "Download FlashCut AutoCapcut",
+        "subtitle": "The most powerful CapCut video automation tool. Install in 2 minutes, start creating videos right away.",
+        "cta": "Download for Free",
+        "free": "Free trial available",
+        "requirements": "System Requirements",
+        "included": "What's Included",
+        "req": {
+            "os": "Operating System",
+            "cpu": "Processor",
+            "ram": "RAM",
+            "disk": "Disk Space"
+        },
+        "feat": {
+            "auto": "Auto-generate CapCut projects from scripts",
+            "batch": "Batch process multiple media files",
+            "effects": "Automatic effects, transitions & filters",
+            "audio": "Audio & subtitle synchronization",
+            "templates": "Built-in template library",
+            "updates": "Free lifetime updates"
+        }
+    },
+    "privacy": {
+        "title": "Privacy Policy",
+        "lastUpdated": "Last updated: February 22, 2026",
+        "intro": "FlashCut.ai is committed to protecting your privacy. This policy explains how we collect, use, and safeguard your personal information.",
+        "dataCollection": {
+            "title": "Data Collection",
+            "content": "We collect information you provide when creating an account (name, email) and service usage data (activity logs, device info). We do not collect your video data or creative content."
+        },
+        "cookies": {
+            "title": "Cookies",
+            "content": "We use essential cookies to maintain login sessions and analytics cookies to improve the experience. You can disable cookies in your browser settings."
+        },
+        "thirdParty": {
+            "title": "Third-Party Services",
+            "content": "We use Google OAuth for authentication. When you sign in with Google, we only receive your name and email from Google, no other data is accessed."
+        },
+        "security": {
+            "title": "Security",
+            "content": "Passwords are encrypted using bcrypt. Data is transmitted over HTTPS. We regularly update our security measures."
+        },
+        "rights": {
+            "title": "Your Rights",
+            "content": "You have the right to access, modify, or delete your personal data. Contact support@flashcut.ai to make a request."
+        },
+        "changes": {
+            "title": "Policy Changes",
+            "content": "We may update this policy. Any significant changes will be communicated via email or on the website."
+        }
+    },
+    "terms": {
+        "title": "Terms of Service",
+        "lastUpdated": "Last updated: February 22, 2026",
+        "intro": "By using FlashCut.ai and AutoCapcut, you agree to comply with the following terms.",
+        "usage": {
+            "title": "Use of Service",
+            "content": "FlashCut.ai provides video automation tools for CapCut. You must be 18 years or older to use the service. You are responsible for the content created using our tools."
+        },
+        "license": {
+            "title": "License",
+            "content": "Upon purchasing a license, you are granted a non-exclusive, non-transferable right to use the software. Each license is bound to a single device."
+        },
+        "restrictions": {
+            "title": "Restrictions",
+            "content": "You may not redistribute, copy, or reverse-engineer the software. Do not use it to create content that violates laws or copyrights."
+        },
+        "payment": {
+            "title": "Payment",
+            "content": "Payment is accepted via bank transfer or e-wallets. Licenses are activated upon payment confirmation. No refunds after 7 days from purchase."
+        },
+        "liability": {
+            "title": "Limitation of Liability",
+            "content": "FlashCut.ai is not liable for indirect damages arising from the use of the service. The service is provided \"as-is\"."
+        },
+        "termination": {
+            "title": "Termination",
+            "content": "We reserve the right to terminate accounts that violate the terms. You may also request account deletion at any time."
+        },
+        "changes": {
+            "title": "Changes to Terms",
+            "content": "Terms may be updated. Continued use of the service after changes constitutes acceptance of the new terms."
+        }
+    },
+    "contact": {
+        "title": "Contact Us",
+        "subtitle": "Have a question or need support? Send us a message.",
+        "name": "Full Name",
+        "namePlaceholder": "John Doe",
+        "email": "Email",
+        "subject": "Subject",
+        "subjectPlaceholder": "Technical support / Purchase license / Feedback",
+        "message": "Message",
+        "messagePlaceholder": "Describe your issue or question in detail...",
+        "send": "Send Message",
+        "error": "Something went wrong, please try again",
+        "successTitle": "Message Sent!",
+        "successMessage": "We'll get back to you within 24 hours."
+    }
+}
