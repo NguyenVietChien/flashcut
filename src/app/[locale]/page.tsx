@@ -20,7 +20,7 @@ export default function HomePage() {
             <Comparison />
             <Pricing />
             <Testimonials />
-            <Roadmap />
+            {/* <Roadmap /> */}
             <CTA />
         </>
     );

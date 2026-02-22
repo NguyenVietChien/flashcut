@@ -5,6 +5,7 @@ import { routing } from "@/lib/i18n/routing";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import FloatSupport from "@/components/layout/FloatSupport";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
 
 import AuthProvider from "@/components/auth/AuthProvider";
@@ -66,6 +67,7 @@ export default async function LocaleLayout({
                             <Navbar />
                             <main>{children}</main>
                             <Footer />
+                            <FloatSupport />
                         </AuthProvider>
                     </NextIntlClientProvider>
                 </ThemeProvider>

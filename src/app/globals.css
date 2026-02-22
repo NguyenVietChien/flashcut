@@ -38,7 +38,7 @@
   --glow-lg: rgba(0, 212, 255, 0.15);
   --gold: #f59e0b;
 
-  --glass-bg: rgba(37, 42, 46, 0.6);
+  --glass-bg: rgba(37, 42, 46, 0.85);
   --glass-border: rgba(45, 50, 56, 0.8);
 }
 
@@ -303,9 +303,9 @@ html {
 .gradient-border::before {
   content: '';
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 1px;
+  inset: -1px;
+  border-radius: 13px;
+  padding: 1.5px;
   background: linear-gradient(135deg, var(--accent), var(--info), var(--accent));
   background-size: 200% 200%;
   animation: gradient-shift 4s ease infinite;
