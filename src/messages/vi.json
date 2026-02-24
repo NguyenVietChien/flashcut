@@ -154,55 +154,132 @@
         "popular": "Phổ biến nhất",
         "currency": "đ",
         "period": "/tháng",
+        "featureCount": "{count} tính năng",
         "plans": [
             {
                 "name": "BASIC",
                 "emoji": "🥉",
                 "price": "400,000",
-                "tagline": "Cho người mới bắt đầu",
+                "tagline": "Có kịch bản? 1 click ra video hoàn chỉnh",
+                "highlight": "Bộ công cụ cốt lõi",
                 "cta": "Bắt Đầu",
-                "features": [
-                    "Core Builder (Video/Text/Audio)",
-                    "Auto-Sync Media Folder",
-                    "Image Sort (pattern 1,2,3...)",
-                    "Multi-Audio Import",
-                    "Manual AI (BYOK)"
+                "featureGroups": [
+                    {
+                        "group": "Tạo video",
+                        "items": [
+                            "Có kịch bản → ra video chỉ trong vài phút",
+                            "Ghép video, text & audio dễ dàng",
+                            "Tự động sắp xếp & sắp thứ tự file media"
+                        ]
+                    },
+                    {
+                        "group": "Hoàn thiện",
+                        "items": [
+                            "Xếp chồng nhiều audio track",
+                            "100+ hiệu ứng & filter sẵn dùng ngay",
+                            "Chuyển cảnh mượt mà giữa các scene",
+                            "Timeline trực quan — kéo & thả"
+                        ]
+                    },
+                    {
+                        "group": "AI hỗ trợ",
+                        "items": [
+                            "Dùng key AI của bạn (BYOK)",
+                            "Chat với GPT hoặc Gemini",
+                            "Để AI viết kịch bản cho bạn"
+                        ]
+                    },
+                    {
+                        "group": "Xuất bản",
+                        "items": [
+                            "1 click — từ kịch bản đến sản phẩm"
+                        ]
+                    }
                 ]
             },
             {
                 "name": "PRO",
                 "emoji": "🥈",
                 "price": "700,000",
-                "tagline": "Cho nhà sáng tạo chuyên nghiệp",
+                "tagline": "Công cụ thông minh — sản xuất video chất lượng studio nhanh hơn",
+                "highlight": "Tất cả Basic, thêm",
                 "cta": "Nâng Cấp Ngay",
-                "features": [
-                    "Tất cả tính năng Basic",
-                    "Batch Automation (Filter/Effect)",
-                    "Pipeline Templates",
-                    "Advanced Transcription (Deepgram)",
-                    "Smart Insert SFX (AI)",
-                    "Text Style & Keyframe Presets",
-                    "Budget Guard (API Cost Control)",
-                    "Chat Tab + Image Paste"
+                "featureGroups": [
+                    {
+                        "group": "Sức mạnh",
+                        "items": [
+                            "Áp hiệu ứng cho tất cả clip tức thì",
+                            "Lưu & tái sử dụng style yêu thích",
+                            "Xây template project tái sử dụng"
+                        ]
+                    },
+                    {
+                        "group": "AI thông minh",
+                        "items": [
+                            "4 AI model phối hợp cùng lúc",
+                            "10 AI tools — chính xác 95.5%",
+                            "AI tự chọn SFX phù hợp nhất",
+                            "Không lo vượt ngân sách AI"
+                        ]
+                    },
+                    {
+                        "group": "Giọng nói & Phụ đề",
+                        "items": [
+                            "Tạo giọng nói từ văn bản",
+                            "Chuyển giọng nói thành text tức thì",
+                            "Tự động tạo phụ đề"
+                        ]
+                    },
+                    {
+                        "group": "Quy trình",
+                        "items": [
+                            "Theo dõi mọi phiên bản project",
+                            "Quy trình sản xuất chuyên nghiệp",
+                            "Hỗ trợ email ưu tiên"
+                        ]
+                    }
                 ]
             },
             {
                 "name": "ULTRA",
                 "emoji": "🥇",
                 "price": "1,200,000",
-                "tagline": "Studio khép kín — Đạo diễn AI",
+                "tagline": "Chỉ cần mô tả — AI edit video cho bạn",
+                "highlight": "Tất cả Pro, thêm",
                 "cta": "Liên Hệ",
-                "features": [
-                    "Tất cả tính năng Pro",
-                    "AI Agent Editing (Chat to Edit)",
-                    "Closed-loop Studio (MJ/Flux)",
-                    "Multi-Project Auto v7.0",
-                    "Batch Variation (A/B Testing)",
-                    "Auto Render/Export Video",
-                    "n8n Integration (Webhook)",
-                    "Screenshot-to-Video",
-                    "Web-to-Video",
-                    "Hỗ trợ ưu tiên 24/7"
+                "featureGroups": [
+                    {
+                        "group": "AI Director",
+                        "items": [
+                            "Mô tả ý tưởng — AI tự edit video",
+                            "Ra lệnh bằng ngôn ngữ tự nhiên — không cần học",
+                            "Xem thay đổi ngay khi chat"
+                        ]
+                    },
+                    {
+                        "group": "Creative Studio",
+                        "items": [
+                            "Tạo ảnh bằng 3 engine AI",
+                            "Quy trình sáng tạo khép kín",
+                            "Tự động render & xuất video hoàn chỉnh"
+                        ]
+                    },
+                    {
+                        "group": "Mở rộng",
+                        "items": [
+                            "Chạy nhiều project song song",
+                            "A/B test các biến thể video",
+                            "Template không giới hạn"
+                        ]
+                    },
+                    {
+                        "group": "Kết nối",
+                        "items": [
+                            "Tự động với webhooks",
+                            "Truy cập REST API đầy đủ",
+                            "Tùy chỉnh trigger workflow"
+                        ]
+                    }
                 ]
             }
         ]

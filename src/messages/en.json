@@ -154,55 +154,132 @@
         "popular": "Most Popular",
         "currency": "$",
         "period": "/month",
+        "featureCount": "{count} features",
         "plans": [
             {
                 "name": "BASIC",
                 "emoji": "🥉",
                 "price": "16",
-                "tagline": "For beginners",
+                "tagline": "Got a script? One click to a finished video",
+                "highlight": "Essential toolkit",
                 "cta": "Get Started",
-                "features": [
-                    "Core Builder (Video/Text/Audio)",
-                    "Auto-Sync Media Folder",
-                    "Image Sort (pattern 1,2,3...)",
-                    "Multi-Audio Import",
-                    "Manual AI (BYOK)"
+                "featureGroups": [
+                    {
+                        "group": "Create",
+                        "items": [
+                            "Script in → finished video out, in minutes",
+                            "Combine video, text & audio effortlessly",
+                            "Auto-organize & sequence your media files"
+                        ]
+                    },
+                    {
+                        "group": "Polish",
+                        "items": [
+                            "Layer multiple audio tracks",
+                            "100+ effects & filters ready to use",
+                            "Smooth transitions between scenes",
+                            "Visual timeline — drag & drop"
+                        ]
+                    },
+                    {
+                        "group": "AI Assist",
+                        "items": [
+                            "Use your own AI key (BYOK)",
+                            "Chat with GPT or Gemini",
+                            "Let AI write your script"
+                        ]
+                    },
+                    {
+                        "group": "Deliver",
+                        "items": [
+                            "One click — script to final product"
+                        ]
+                    }
                 ]
             },
             {
                 "name": "PRO",
                 "emoji": "🥈",
                 "price": "29",
-                "tagline": "For professional creators",
+                "tagline": "Smart tools — produce studio-quality videos faster",
+                "highlight": "Everything in Basic, plus",
                 "cta": "Upgrade Now",
-                "features": [
-                    "Everything in Basic",
-                    "Batch Automation (Filter/Effect)",
-                    "Pipeline Templates",
-                    "Advanced Transcription (Deepgram)",
-                    "Smart Insert SFX (AI)",
-                    "Text Style & Keyframe Presets",
-                    "Budget Guard (API Cost Control)",
-                    "Chat Tab + Image Paste"
+                "featureGroups": [
+                    {
+                        "group": "Power Tools",
+                        "items": [
+                            "Apply effects to all clips instantly",
+                            "Save & reuse your favorite styles",
+                            "Build reusable project templates"
+                        ]
+                    },
+                    {
+                        "group": "AI Brain",
+                        "items": [
+                            "4 AI models working together",
+                            "10 AI tools — 95.5% accuracy",
+                            "AI picks the perfect sound effects",
+                            "Never overspend on AI — budget guard"
+                        ]
+                    },
+                    {
+                        "group": "Voice & Subtitle",
+                        "items": [
+                            "Generate voices from text",
+                            "Turn speech into text instantly",
+                            "Auto-generate subtitles"
+                        ]
+                    },
+                    {
+                        "group": "Workflow",
+                        "items": [
+                            "Track every version of your project",
+                            "Streamlined production pipeline",
+                            "Priority email support"
+                        ]
+                    }
                 ]
             },
             {
                 "name": "ULTRA",
                 "emoji": "🥇",
                 "price": "49",
-                "tagline": "All-in-one AI Director Studio",
+                "tagline": "Just describe it — AI edits your video",
+                "highlight": "Everything in Pro, plus",
                 "cta": "Contact Us",
-                "features": [
-                    "Everything in Pro",
-                    "AI Agent Editing (Chat to Edit)",
-                    "Closed-loop Studio (MJ/Flux)",
-                    "Multi-Project Auto v7.0",
-                    "Batch Variation (A/B Testing)",
-                    "Auto Render/Export Video",
-                    "n8n Integration (Webhook)",
-                    "Screenshot-to-Video",
-                    "Web-to-Video",
-                    "24/7 Priority Support"
+                "featureGroups": [
+                    {
+                        "group": "AI Director",
+                        "items": [
+                            "Describe what you want — AI does the editing",
+                            "Natural language commands — no learning curve",
+                            "See changes in real-time as you chat"
+                        ]
+                    },
+                    {
+                        "group": "Creative Studio",
+                        "items": [
+                            "Generate images with 3 AI engines",
+                            "End-to-end visual production",
+                            "Auto render & deliver final video"
+                        ]
+                    },
+                    {
+                        "group": "Scale",
+                        "items": [
+                            "Run multiple projects simultaneously",
+                            "A/B test video variations",
+                            "Unlimited reusable templates"
+                        ]
+                    },
+                    {
+                        "group": "Connect",
+                        "items": [
+                            "Automate with webhooks",
+                            "Full REST API access",
+                            "Custom workflow triggers"
+                        ]
+                    }
                 ]
             }
         ]
