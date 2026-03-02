@@ -5,7 +5,7 @@ import { routing } from "./lib/i18n/routing";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const protectedPaths = ["/dashboard"];
+const protectedPaths = ["/dashboard", "/admin"];
 
 function isProtectedPath(pathname: string): boolean {
     return protectedPaths.some(
@@ -33,5 +33,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-    matcher: ["/", "/(vi|en)/:path*", "/((?!_next|api|favicon.ico|.*\\..*).*)"],
+    matcher: ["/", "/(vi|en)/:path*", "/((?!_next|api|favicon.ico|.*\\..*).*)" ],
 };

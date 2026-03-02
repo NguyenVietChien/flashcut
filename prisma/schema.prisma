@@ -1,11 +1,10 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["driverAdapters"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:./dev.db"
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
 }
 
 model User {
@@ -15,6 +14,7 @@ model User {
     emailVerified DateTime?
     image         String?
     password      String?
+    role          String    @default("user")
     accounts      Account[]
     sessions      Session[]
     orders        Order[]
@@ -93,4 +93,44 @@ model License {
     expiresAt   DateTime
     user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     order       Order    @relation(fields: [orderId], references: [id])
+}
+
+// ─── Desktop License (MiniApp) ────────────────────────────────
+
+model DesktopLicense {
+    id                 String          @id @default(cuid())
+    licenseKey         String          @unique @map("license_key")
+    tier               String          @default("basic")
+    hwidHash           String?         @map("hwid_hash")
+    maxActivations     Int             @default(1) @map("max_activations")
+    currentActivations Int             @default(0) @map("current_activations")
+    usageLimit         Int             @default(10) @map("usage_limit")
+    currentUsage       Int             @default(0) @map("current_usage")
+    lastSeen           DateTime?       @map("last_seen")
+    isActive           Boolean         @default(true) @map("is_active")
+    createdAt          DateTime        @default(now()) @map("created_at")
+    expiresAt          DateTime?       @map("expires_at")
+    activationLogs     ActivationLog[]
+
+    @@map("desktop_licenses")
+}
+
+model ActivationLog {
+    id        Int            @id @default(autoincrement())
+    licenseId String         @map("license_id")
+    hwidHash  String         @map("hwid_hash")
+    ipAddress String?        @map("ip_address")
+    timestamp DateTime       @default(now())
+    license   DesktopLicense @relation(fields: [licenseId], references: [id])
+
+    @@map("activation_logs")
+}
+
+model SessionSecret {
+    hwidHash      String   @id @map("hwid_hash")
+    sessionSecret String   @map("session_secret")
+    createdAt     DateTime @default(now()) @map("created_at")
+    expiresAt     DateTime @map("expires_at")
+
+    @@map("session_secrets")
 }
