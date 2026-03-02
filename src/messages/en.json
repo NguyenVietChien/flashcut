@@ -399,7 +399,8 @@
         "licenseKey": "License Key",
         "expiresAt": "Expires",
         "active": "Active",
-        "expired": "Expired"
+        "expired": "Expired",
+        "orderHistory": "Order History"
     },
     "checkoutSuccess": {
         "title": "Payment Successful!",

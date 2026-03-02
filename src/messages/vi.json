@@ -399,7 +399,8 @@
         "licenseKey": "Mã license",
         "expiresAt": "Hết hạn",
         "active": "Đang hoạt động",
-        "expired": "Đã hết hạn"
+        "expired": "Đã hết hạn",
+        "orderHistory": "Lịch sử đơn hàng"
     },
     "checkoutSuccess": {
         "title": "Thanh Toán Thành Công!",
