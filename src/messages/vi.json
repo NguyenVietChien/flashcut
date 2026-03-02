@@ -582,6 +582,20 @@
         "pinWrong": "Mã PIN không đúng",
         "pinConfigError": "Lỗi cấu hình hệ thống",
         "pinTooMany": "Quá nhiều lần thử sai. Vui lòng thử lại sau.",
-        "pinSessionInfo": "Phiên admin hết hạn sau 30 phút"
+        "pinSessionInfo": "Phiên admin hết hạn sau 30 phút",
+        "editRole": "Đổi vai trò",
+        "deleteUser": "Xoá người dùng",
+        "updateStatus": "Cập nhật trạng thái",
+        "deleteOrder": "Xoá đơn hàng",
+        "pending": "Chờ xử lý",
+        "paid": "Đã thanh toán",
+        "cancelled": "Đã hủy",
+        "refunded": "Đã hoàn tiền",
+        "revenueChart": "Doanh thu (7 ngày)",
+        "userGrowth": "Người dùng mới",
+        "thisWeek": "tuần này",
+        "status": "Trạng thái",
+        "usageLimit": "Giới hạn sử dụng",
+        "delete": "Xóa"
     }
 }

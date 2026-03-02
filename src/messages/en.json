@@ -582,6 +582,20 @@
         "pinWrong": "Incorrect PIN",
         "pinConfigError": "System configuration error",
         "pinTooMany": "Too many failed attempts. Please try again later.",
-        "pinSessionInfo": "Admin session expires after 30 minutes"
+        "pinSessionInfo": "Admin session expires after 30 minutes",
+        "editRole": "Edit Role",
+        "deleteUser": "Delete User",
+        "updateStatus": "Update Status",
+        "deleteOrder": "Delete Order",
+        "pending": "Pending",
+        "paid": "Paid",
+        "cancelled": "Cancelled",
+        "refunded": "Refunded",
+        "revenueChart": "Revenue (7 days)",
+        "userGrowth": "New Users",
+        "thisWeek": "this week",
+        "status": "Status",
+        "usageLimit": "Usage Limit",
+        "delete": "Delete"
     }
 }

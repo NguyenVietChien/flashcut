@@ -12,6 +12,39 @@ export default async function AdminDashboard() {
         prisma.order.count({ where: { status: "paid" } }),
     ]);
 
+    // Revenue data — last 7 days
+    const now = new Date();
+    const last7Days: { label: string; revenue: number; users: number }[] = [];
+
+    for (let i = 6; i >= 0; i--) {
+        const dayStart = new Date(now);
+        dayStart.setDate(now.getDate() - i);
+        dayStart.setHours(0, 0, 0, 0);
+        const dayEnd = new Date(dayStart);
+        dayEnd.setHours(23, 59, 59, 999);
+
+        const [dayRevenue, dayUsers] = await Promise.all([
+            prisma.order.aggregate({
+                _sum: { amount: true },
+                where: { status: "paid", paidAt: { gte: dayStart, lte: dayEnd } },
+            }),
+            prisma.user.count({
+                where: { createdAt: { gte: dayStart, lte: dayEnd } },
+            }),
+        ]);
+
+        last7Days.push({
+            label: dayStart.toLocaleDateString("vi-VN", { weekday: "short", day: "numeric" }),
+            revenue: dayRevenue._sum.amount || 0,
+            users: dayUsers,
+        });
+    }
+
+    const maxRevenue = Math.max(...last7Days.map((d) => d.revenue), 1);
+    const maxUsers = Math.max(...last7Days.map((d) => d.users), 1);
+    const totalRevenue = last7Days.reduce((sum, d) => sum + d.revenue, 0);
+    const totalNewUsers = last7Days.reduce((sum, d) => sum + d.users, 0);
+
     const recentUsers = await prisma.user.findMany({
         take: 5,
         orderBy: { createdAt: "desc" },
@@ -25,10 +58,10 @@ export default async function AdminDashboard() {
     });
 
     const cards = [
-        { icon: Users, label: t("totalUsers"), value: userCount, color: "text-accent" },
-        { icon: Key, label: t("totalLicenses"), value: desktopLicenseCount, color: "text-purple-400" },
-        { icon: ShoppingCart, label: t("totalOrders"), value: orderCount, color: "text-amber-400" },
-        { icon: TrendingUp, label: t("paidOrders"), value: paidOrderCount, color: "text-emerald-400" },
+        { icon: Users, label: t("totalUsers"), value: userCount, color: "text-accent", bg: "bg-accent/10" },
+        { icon: Key, label: t("totalLicenses"), value: desktopLicenseCount, color: "text-purple-400", bg: "bg-purple-400/10" },
+        { icon: ShoppingCart, label: t("totalOrders"), value: orderCount, color: "text-amber-400", bg: "bg-amber-400/10" },
+        { icon: TrendingUp, label: t("paidOrders"), value: paidOrderCount, color: "text-emerald-400", bg: "bg-emerald-400/10" },
     ];
 
     return (
@@ -38,14 +71,79 @@ export default async function AdminDashboard() {
             {/* Stats Cards */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                 {cards.map((card) => (
-                    <div key={card.label} className="glass-card p-6">
+                    <div key={card.label} className="glass-card p-6 group hover:border-accent/30 transition-all">
                         <div className="flex items-center gap-3 mb-3">
-                            <card.icon className={`w-5 h-5 ${card.color}`} />
+                            <div className={`w-10 h-10 rounded-xl ${card.bg} flex items-center justify-center`}>
+                                <card.icon className={`w-5 h-5 ${card.color}`} />
+                            </div>
                             <span className="text-text-secondary text-sm">{card.label}</span>
                         </div>
-                        <p className="text-3xl font-bold text-text-primary">{card.value}</p>
+                        <p className="text-3xl font-bold text-text-primary">{card.value.toLocaleString()}</p>
                     </div>
                 ))}
+            </div>
+
+            {/* Charts Row */}
+            <div className="grid lg:grid-cols-2 gap-8 mb-10">
+                {/* Revenue Chart */}
+                <div className="glass-card p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-bold text-text-primary">{t("revenueChart")}</h2>
+                        <span className="text-sm font-medium text-emerald-400">
+                            {new Intl.NumberFormat("vi-VN").format(totalRevenue)}đ
+                        </span>
+                    </div>
+                    <div className="flex items-end gap-2 h-40">
+                        {last7Days.map((day, i) => (
+                            <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                                <div className="w-full relative group">
+                                    {day.revenue > 0 && (
+                                        <div className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                                            {new Intl.NumberFormat("vi-VN").format(day.revenue)}đ
+                                        </div>
+                                    )}
+                                    <div
+                                        className="w-full rounded-t-md bg-gradient-to-t from-emerald-500/60 to-emerald-400/80 transition-all hover:from-emerald-500/80 hover:to-emerald-400"
+                                        style={{
+                                            height: `${Math.max((day.revenue / maxRevenue) * 120, day.revenue > 0 ? 8 : 2)}px`,
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-[10px] text-text-tertiary">{day.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* User Growth Chart */}
+                <div className="glass-card p-6">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-lg font-bold text-text-primary">{t("userGrowth")}</h2>
+                        <span className="text-sm font-medium text-accent">
+                            +{totalNewUsers} {t("thisWeek")}
+                        </span>
+                    </div>
+                    <div className="flex items-end gap-2 h-40">
+                        {last7Days.map((day, i) => (
+                            <div key={i} className="flex-1 flex flex-col items-center gap-2">
+                                <div className="w-full relative group">
+                                    {day.users > 0 && (
+                                        <div className="absolute -top-7 left-1/2 -translate-x-1/2 text-[10px] text-text-tertiary opacity-0 group-hover:opacity-100 transition-opacity">
+                                            +{day.users}
+                                        </div>
+                                    )}
+                                    <div
+                                        className="w-full rounded-t-md bg-gradient-to-t from-accent/60 to-accent/80 transition-all hover:from-accent/80 hover:to-accent"
+                                        style={{
+                                            height: `${Math.max((day.users / maxUsers) * 120, day.users > 0 ? 8 : 2)}px`,
+                                        }}
+                                    />
+                                </div>
+                                <span className="text-[10px] text-text-tertiary">{day.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
             </div>
 
             <div className="grid lg:grid-cols-2 gap-8">

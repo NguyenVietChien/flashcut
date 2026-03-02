@@ -149,7 +149,7 @@ export default function Pricing() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true, margin: "-80px" }}
-                    className="grid md:grid-cols-3 gap-6 lg:gap-8 items-start"
+                    className="grid md:grid-cols-3 gap-6 lg:gap-8 items-stretch"
                 >
                     {plans.map((plan, i) => {
                         const style = tierStyles[i];
@@ -205,10 +205,10 @@ export default function Pricing() {
                                     {/* Price */}
                                     <div className="mb-1">
                                         <span className={`text-5xl font-extrabold ${isUltra ? "text-gold" : "text-text-primary"}`}>
-                                            {plan.price}
+                                            {t("currency")}{plan.price}
                                         </span>
                                         <span className="text-text-secondary text-sm ml-1">
-                                            {t("currency")}{t("period")}
+                                            {t("period")}
                                         </span>
                                     </div>
 
@@ -274,7 +274,7 @@ export default function Pricing() {
                                     </div>
 
                                     {/* CTA Button */}
-                                    <div className="mt-8">
+                                    <div className="mt-auto pt-8">
                                         {i < 2 ? (
                                             <motion.button
                                                 onClick={() => handleCheckout(planIds[i])}

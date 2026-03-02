@@ -1,8 +1,12 @@
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
+import { EditRoleButton, DeleteUserButton } from "./components";
 
 export default async function AdminUsersPage() {
     const t = await getTranslations("admin");
+    const session = await auth();
+    const currentUserId = session?.user?.id;
 
     const users = await prisma.user.findMany({
         orderBy: { createdAt: "desc" },
@@ -11,6 +15,14 @@ export default async function AdminUsersPage() {
             _count: { select: { orders: true } },
         },
     });
+
+    const labels = {
+        editRole: t("editRole"),
+        deleteUser: t("deleteUser"),
+        cancel: t("cancel"),
+        save: t("save"),
+        confirm: t("confirm"),
+    };
 
     return (
         <div>
@@ -30,6 +42,7 @@ export default async function AdminUsersPage() {
                                 <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("plan")}</th>
                                 <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("ordersCount")}</th>
                                 <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("createdAt")}</th>
+                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("actions")}</th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-border-default">
@@ -59,6 +72,19 @@ export default async function AdminUsersPage() {
                                     <td className="px-6 py-4 text-sm text-text-secondary">{user._count.orders}</td>
                                     <td className="px-6 py-4 text-sm text-text-tertiary">
                                         {new Date(user.createdAt).toLocaleDateString("vi-VN")}
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center gap-2">
+                                            <EditRoleButton
+                                                user={{ id: user.id, role: user.role, name: user.name, email: user.email }}
+                                                labels={labels}
+                                            />
+                                            <DeleteUserButton
+                                                userId={user.id}
+                                                isCurrentUser={user.id === currentUserId}
+                                                labels={labels}
+                                            />
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
