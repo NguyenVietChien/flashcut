@@ -9,6 +9,7 @@ import {
     Users,
     Key,
     ShoppingCart,
+    FileText,
     Shield,
     LogOut,
 } from "lucide-react";
@@ -38,6 +39,7 @@ const navItems = [
     { href: "/users", icon: Users, label: "users" },
     { href: "/desktop-licenses", icon: Key, label: "desktopLicenses" },
     { href: "/orders", icon: ShoppingCart, label: "orders" },
+    { href: "/blog", icon: FileText, label: "blog" },
 ];
 
 export default async function AdminLayout({
