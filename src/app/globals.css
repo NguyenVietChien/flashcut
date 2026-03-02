@@ -50,19 +50,19 @@
   --bg-hover: #e0e0e5;
   --bg-active: #d5d5da;
 
-  --accent: #00aad4;
-  --accent-hover: #0095ba;
-  --accent-pressed: #007a99;
-  --accent-disabled: #99d6e6;
+  --accent: #0097b2;
+  --accent-hover: #00b4d8;
+  --accent-pressed: #007a91;
+  --accent-disabled: #99d6e3;
 
   --text-primary: #1a1d21;
-  --text-secondary: #6b6b6b;
-  --text-tertiary: #a0a0a0;
-  --text-disabled: #c8c8c8;
+  --text-secondary: #525252;
+  --text-tertiary: #8a8a8a;
+  --text-disabled: #b0b0b0;
 
   --border-default: #e0e0e5;
-  --border-focus: #00aad4;
-  --border-hover: #c8c8cd;
+  --border-focus: #0097b2;
+  --border-hover: #ccccd1;
 
   --success: #2e7d32;
   --warning: #e65100;
@@ -110,15 +110,52 @@
   --font-mono: var(--font-jetbrains-mono);
 }
 
-/* --- Base Styles --- */
+/* ============================================
+   GLOBAL TYPOGRAPHY — Polished
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 body {
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-sans, 'Inter', system-ui, sans-serif);
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: -0.011em;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* --- Glass Effect Utility --- */
+/* Headings — tighter tracking, proper weight hierarchy */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+h1 { font-size: clamp(2rem, 4vw, 3rem); }
+h2 { font-size: clamp(1.5rem, 3vw, 2.25rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.5rem); font-weight: 600; }
+h4 { font-size: 1.125rem; font-weight: 600; }
+
+/* Paragraphs — comfortable reading */
+p {
+  line-height: 1.7;
+  letter-spacing: -0.006em;
+}
+
+/* Small text helpers */
+small, .text-xs, .text-sm {
+  letter-spacing: 0em;
+}
+
+/* ============================================
+   GLASS EFFECTS
+   ============================================ */
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -126,10 +163,26 @@ body {
   border: 1px solid var(--glass-border);
 }
 
-/* --- Announcement Bar --- */
+.glass-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 0 20px var(--glow);
+}
+
+/* ============================================
+   ANNOUNCEMENT BAR
+   ============================================ */
 .announcement-bar {
   position: relative;
-  padding: 8px 0;
+  padding: 10px 0;
   background: linear-gradient(90deg, #7c3aed, #2563eb, #0891b2);
   background-size: 200% 100%;
   animation: announcement-shift 6s ease infinite;
@@ -141,21 +194,9 @@ body {
   50% { background-position: 100% 50%; }
 }
 
-.glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.glass-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 0 20px var(--glow);
-}
-
-/* --- Gradient Text --- */
+/* ============================================
+   GRADIENT TEXT
+   ============================================ */
 .gradient-text {
   background: linear-gradient(135deg, var(--accent), var(--info));
   -webkit-background-clip: text;
@@ -163,13 +204,17 @@ body {
   background-clip: text;
 }
 
-/* --- Accent Glow Button --- */
+/* ============================================
+   BUTTONS — Consistent sizing & feedback
+   ============================================ */
 .btn-accent {
   background: var(--accent);
   color: #000;
   font-weight: 600;
-  padding: 12px 28px;
-  border-radius: 8px;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
   transition: all 0.2s ease;
   cursor: pointer;
 }
@@ -184,8 +229,10 @@ body {
   background: transparent;
   color: var(--accent);
   font-weight: 600;
-  padding: 12px 28px;
-  border-radius: 8px;
+  padding: 12px 32px;
+  border-radius: 12px;
+  font-size: 15px;
+  letter-spacing: -0.01em;
   border: 1px solid var(--accent);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -196,36 +243,22 @@ body {
   box-shadow: 0 0 16px var(--glow);
 }
 
-/* --- Scrollbar --- */
-::-webkit-scrollbar {
-  width: 8px;
-}
+/* ============================================
+   SCROLLBAR & SELECTION
+   ============================================ */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-secondary); }
+::-webkit-scrollbar-thumb { background: var(--bg-hover); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
 
-::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--bg-hover);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-tertiary);
-}
-
-/* --- Selection --- */
 ::selection {
   background: rgba(0, 212, 255, 0.3);
   color: var(--text-primary);
 }
 
-/* --- Smooth Scroll --- */
-html {
-  scroll-behavior: smooth;
-}
-
-/* --- Keyframe Animations --- */
+/* ============================================
+   KEYFRAME ANIMATIONS
+   ============================================ */
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -262,29 +295,15 @@ html {
 }
 
 /* --- Animation Utilities --- */
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
+.animate-float { animation: float 6s ease-in-out infinite; }
+.animate-shimmer { background-size: 200% auto; animation: shimmer 3s linear infinite; }
+.animate-gradient { background-size: 200% 200%; animation: gradient-shift 4s ease infinite; }
+.animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+.animate-subtle-bounce { animation: subtle-bounce 2s ease-in-out infinite; }
 
-.animate-shimmer {
-  background-size: 200% auto;
-  animation: shimmer 3s linear infinite;
-}
-
-.animate-gradient {
-  background-size: 200% 200%;
-  animation: gradient-shift 4s ease infinite;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 3s ease-in-out infinite;
-}
-
-.animate-subtle-bounce {
-  animation: subtle-bounce 2s ease-in-out infinite;
-}
-
-/* --- Hover Lift --- */
+/* ============================================
+   HOVER LIFT
+   ============================================ */
 .hover-lift {
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -294,7 +313,9 @@ html {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), 0 0 20px var(--glow);
 }
 
-/* --- Gradient Border Animation --- */
+/* ============================================
+   GRADIENT BORDER ANIMATION
+   ============================================ */
 .gradient-border {
   position: relative;
   overflow: visible;
@@ -315,42 +336,52 @@ html {
   pointer-events: none;
 }
 
-/* --- Section divider --- */
+/* ============================================
+   SECTION DIVIDER
+   ============================================ */
 .section-divider {
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--border-default), transparent);
 }
 
-/* --- Admin Utilities --- */
+/* ============================================
+   ADMIN UTILITIES — Polished spacing
+   ============================================ */
 .input-field {
   width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
   border: 1px solid var(--border-default);
   background: var(--bg-primary);
   color: var(--text-primary);
   font-size: 14px;
+  line-height: 1.5;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .input-field:focus {
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+}
+
+.input-field::placeholder {
+  color: var(--text-tertiary);
 }
 
 .th-cell {
   text-align: left;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--text-tertiary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 12px 24px;
+  letter-spacing: 0.06em;
+  padding: 14px 24px;
 }
 
 .action-btn {
-  padding: 6px;
-  border-radius: 6px;
+  padding: 7px;
+  border-radius: 8px;
   color: var(--text-tertiary);
   transition: all 0.15s ease;
   cursor: pointer;
@@ -362,8 +393,8 @@ html {
 }
 
 .btn-primary {
-  padding: 8px 20px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: 10px;
   background: var(--accent);
   color: #000;
   font-size: 14px;
@@ -374,11 +405,12 @@ html {
 
 .btn-primary:hover {
   filter: brightness(1.1);
+  box-shadow: 0 0 16px var(--glow);
 }
 
 .btn-cancel {
-  padding: 8px 20px;
-  border-radius: 8px;
+  padding: 10px 24px;
+  border-radius: 10px;
   background: var(--bg-tertiary);
   color: var(--text-secondary);
   font-size: 14px;
@@ -390,4 +422,3 @@ html {
 .btn-cancel:hover {
   background: var(--bg-hover);
 }
-
