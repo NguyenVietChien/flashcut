@@ -422,3 +422,46 @@ small, .text-xs, .text-sm {
 .btn-cancel:hover {
   background: var(--bg-hover);
 }
+
+/* ============================================
+   BLOG PROSE OVERRIDES
+   Fix Tailwind Typography v4 list-style reset
+   ============================================ */
+.prose ul {
+  list-style-type: disc !important;
+  padding-left: 1.5em !important;
+}
+
+.prose ol {
+  list-style-type: decimal !important;
+  padding-left: 1.5em !important;
+}
+
+.prose li {
+  padding-left: 0.375em;
+}
+
+.prose li::marker {
+  color: var(--accent);
+}
+
+.prose ul ul {
+  list-style-type: circle !important;
+}
+
+.prose ul ul ul {
+  list-style-type: square !important;
+}
+
+.prose pre {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: 13.5px;
+}
