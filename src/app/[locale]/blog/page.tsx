@@ -62,6 +62,7 @@ export default async function BlogPage({
                                 readTime={post.readTime}
                                 category={post.category}
                                 coverGradient={post.coverGradient}
+                                coverImage={post.coverImage}
                                 index={i}
                             />
                         ))}

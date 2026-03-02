@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { Clock, ArrowRight } from "lucide-react";
 import { Link } from "@/lib/i18n/navigation";
@@ -13,6 +14,7 @@ interface BlogCardProps {
     readTime: number;
     category: string;
     coverGradient: string;
+    coverImage?: string;
     index: number;
 }
 
@@ -30,6 +32,7 @@ export default function BlogCard({
     readTime,
     category,
     coverGradient,
+    coverImage,
     index,
 }: BlogCardProps) {
     const t = useTranslations("blog");
@@ -45,13 +48,19 @@ export default function BlogCard({
         >
             <Link href={`/blog/${slug}`} className="block h-full">
                 <article className="glass-card overflow-hidden h-full flex flex-col">
-                    <div className={`h-40 bg-gradient-to-br ${coverGradient} relative overflow-hidden`}>
-                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOGM5Ljk0MSAwIDE4LTguMDU5IDE4LTE4cy04LjA1OS0xOC0xOC0xOHptMCAzMmMtNy43MzIgMC0xNC02LjI2OC0xNC0xNHM2LjI2OC0xNCAxNC0xNGM3LjczMiAwIDE0IDYuMjY4IDE0IDE0cy02LjI2OCAxNC0xNCAxNHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L2c+PC9zdmc+')] opacity-30" />
-                        <motion.div
-                            className="absolute inset-0 bg-gradient-to-t from-bg-primary/80 to-transparent"
-                            initial={{ opacity: 0.6 }}
-                            whileHover={{ opacity: 0.8 }}
-                        />
+                    <div className={`h-44 relative overflow-hidden ${!coverImage ? `bg-gradient-to-br ${coverGradient}` : ""}`}>
+                        {coverImage ? (
+                            <Image
+                                src={coverImage}
+                                alt={title}
+                                fill
+                                className="object-cover group-hover:scale-105 transition-transform duration-500"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                            />
+                        ) : (
+                            <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOGM5Ljk0MSAwIDE4LTguMDU5IDE4LTE4cy04LjA1OS0xOC0xOC0xOHptMCAzMmMtNy43MzIgMC0xNC02LjI2OC0xNC0xNHM2LjI2OC0xNCAxNC0xNGM3LjczMiAwIDE0IDYuMjY4IDE0IDE0cy02LjI2OCAxNC0xNCAxNHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L2c+PC9zdmc+')] opacity-30" />
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-bg-primary/80 to-transparent" />
 
                         <div className="absolute top-3 left-3">
                             <span className={`px-2.5 py-1 rounded-full text-xs font-semibold ${categoryColors[category] ?? categoryColors.guide}`}>

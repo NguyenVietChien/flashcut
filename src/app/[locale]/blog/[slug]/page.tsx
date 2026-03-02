@@ -5,6 +5,7 @@ import BlogContent from "@/components/blog/BlogContent";
 import BlogCard from "@/components/blog/BlogCard";
 import { Link } from "@/lib/i18n/navigation";
 import { ArrowLeft, Clock, Calendar, Tag } from "lucide-react";
+import Image from "next/image";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -24,11 +25,13 @@ export async function generateMetadata({
             url: `https://flashcut.ai/${locale}/blog/${slug}`,
             type: "article",
             publishedTime: post.date,
+            ...(post.coverImage && { images: [{ url: `https://flashcut.ai${post.coverImage}` }] }),
         },
         twitter: {
             card: "summary_large_image",
             title: post.title,
             description: post.excerpt,
+            ...(post.coverImage && { images: [`https://flashcut.ai${post.coverImage}`] }),
         },
     };
 }
@@ -63,8 +66,19 @@ export default async function BlogDetailPage({
                     {t("backToList")}
                 </Link>
 
-                <div className={`h-48 sm:h-56 rounded-2xl bg-gradient-to-br ${post.coverGradient} mb-8 relative overflow-hidden`}>
-                    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOGM5Ljk0MSAwIDE4LTguMDU5IDE4LTE4cy04LjA1OS0xOC0xOC0xOHptMCAzMmMtNy43MzIgMC0xNC02LjI2OC0xNC0xNHM2LjI2OC0xNCAxNC0xNGM3LjczMiAwIDE0IDYuMjY4IDE0IDE0cy02LjI2OCAxNC0xNCAxNHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L2c+PC9zdmc+')] opacity-30" />
+                <div className={`h-48 sm:h-64 rounded-2xl relative overflow-hidden mb-8 ${!post.coverImage ? `bg-gradient-to-br ${post.coverGradient}` : ""}`}>
+                    {post.coverImage ? (
+                        <Image
+                            src={post.coverImage}
+                            alt={post.title}
+                            fill
+                            className="object-cover"
+                            sizes="(max-width: 768px) 100vw, 768px"
+                            priority
+                        />
+                    ) : (
+                        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOGM5Ljk0MSAwIDE4LTguMDU5IDE4LTE4cy04LjA1OS0xOC0xOC0xOHptMCAzMmMtNy43MzIgMC0xNC02LjI2OC0xNC0xNHM2LjI2OC0xNCAxNC0xNGM3LjczMiAwIDE0IDYuMjY4IDE0IDE0cy02LjI2OCAxNC0xNCAxNHoiIGZpbGw9InJnYmEoMjU1LDI1NSwyNTUsMC4wNSkiLz48L2c+PC9zdmc+')] opacity-30" />
+                    )}
                 </div>
 
                 <header className="mb-10">
@@ -114,6 +128,7 @@ export default async function BlogDetailPage({
                                 readTime={p.readTime}
                                 category={p.category}
                                 coverGradient={p.coverGradient}
+                                coverImage={p.coverImage}
                                 index={i}
                             />
                         ))}

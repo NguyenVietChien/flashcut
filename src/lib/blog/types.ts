@@ -6,6 +6,7 @@ export interface BlogPost {
     readTime: number;
     category: string;
     coverGradient: string;
+    coverImage?: string;
     locale: string;
     content: string;
 }

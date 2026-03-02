@@ -24,6 +24,7 @@ function parsePost(filename: string, locale: string): BlogPost {
         readTime: data.readTime ?? Math.ceil(content.split(/\s+/).length / 200),
         category: data.category ?? "guide",
         coverGradient: data.coverGradient ?? "from-accent/40 to-cyan-600/40",
+        coverImage: data.coverImage,
         locale,
         content,
     };
