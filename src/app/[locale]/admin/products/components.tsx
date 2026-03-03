@@ -52,7 +52,7 @@ function formatVnd(amount: number) {
 function Modal({ children, onClose, title }: { children: React.ReactNode; onClose: () => void; title: string }) {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-            <div className="bg-bg-secondary border border-border-default rounded-xl w-full max-w-lg mx-4 shadow-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-bg-secondary border border-border-default rounded-xl w-full max-w-3xl mx-4 shadow-2xl max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                 <div className="flex items-center justify-between px-6 py-4 border-b border-border-default sticky top-0 bg-bg-secondary z-10">
                     <h3 className="text-lg font-bold text-text-primary">{title}</h3>
                     <button onClick={onClose} className="p-1 rounded-lg hover:bg-bg-hover text-text-tertiary transition-colors cursor-pointer">
