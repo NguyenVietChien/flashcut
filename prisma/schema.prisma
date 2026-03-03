@@ -7,6 +7,8 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+// ─── Auth ──────────────────────────────────────────────────────
+
 model User {
     id            String    @id @default(cuid())
     name          String?
@@ -58,6 +60,8 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+// ─── Contact ───────────────────────────────────────────────────
+
 model ContactMessage {
     id        String   @id @default(cuid())
     name      String
@@ -67,9 +71,46 @@ model ContactMessage {
     createdAt DateTime @default(now())
 }
 
+// ─── Products & Plans ──────────────────────────────────────────
+
+model Product {
+    id          String    @id @default(cuid())
+    slug        String    @unique
+    name        String
+    type        String    @default("desktop") // "desktop" | "web" | "module"
+    description String?
+    isActive    Boolean   @default(true)
+    createdAt   DateTime  @default(now())
+    plans       Plan[]
+    orders      Order[]
+    licenses    License[]
+}
+
+model Plan {
+    id             String  @id @default(cuid())
+    productId      String
+    slug           String
+    name           String
+    priceVnd       Int
+    priceUsd       Int?
+    durationDays   Int? // null = lifetime
+    maxActivations Int     @default(1)
+    usageLimit     Int? // null = unlimited
+    features       Json?
+    isActive       Boolean @default(true)
+    product        Product @relation(fields: [productId], references: [id])
+
+    @@unique([productId, slug])
+}
+
+// ─── Orders ────────────────────────────────────────────────────
+
 model Order {
     id              String    @id @default(cuid())
-    userId          String
+    productId       String?
+    userId          String?
+    buyerEmail      String?
+    source          String    @default("web") // "web" | "telegram" | "zalo" | "admin"
     plan            String
     amount          Int
     currency        String    @default("vnd")
@@ -78,50 +119,50 @@ model Order {
     stripeSessionId String?   @unique
     paidAt          DateTime?
     createdAt       DateTime  @default(now())
-    user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+    user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+    product         Product?  @relation(fields: [productId], references: [id])
     license         License?
 }
 
+// ─── Unified License ──────────────────────────────────────────
+
 model License {
-    id          String   @id @default(cuid())
-    userId      String
-    orderId     String   @unique
-    key         String   @unique
-    plan        String
-    status      String   @default("active")
-    activatedAt DateTime @default(now())
-    expiresAt   DateTime
-    user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-    order       Order    @relation(fields: [orderId], references: [id])
-}
-
-// ─── Desktop License (MiniApp) ────────────────────────────────
-
-model DesktopLicense {
     id                 String          @id @default(cuid())
-    licenseKey         String          @unique @map("license_key")
+    productId          String?
+    userId             String?
+    orderId            String?         @unique
+    key                String          @unique
+    email              String?
+    contactInfo        String?
+    source             String          @default("web") // "web" | "telegram" | "zalo" | "admin"
+    plan               String
     tier               String          @default("basic")
-    hwidHash           String?         @map("hwid_hash")
-    maxActivations     Int             @default(1) @map("max_activations")
-    currentActivations Int             @default(0) @map("current_activations")
-    usageLimit         Int             @default(10) @map("usage_limit")
-    currentUsage       Int             @default(0) @map("current_usage")
-    lastSeen           DateTime?       @map("last_seen")
-    isActive           Boolean         @default(true) @map("is_active")
-    createdAt          DateTime        @default(now()) @map("created_at")
-    expiresAt          DateTime?       @map("expires_at")
+    status             String          @default("active")
+    hwidHash           String?
+    maxActivations     Int             @default(1)
+    currentActivations Int             @default(0)
+    usageLimit         Int?
+    currentUsage       Int             @default(0)
+    lastSeen           DateTime?
+    note               String?
+    activatedAt        DateTime        @default(now())
+    expiresAt          DateTime?
+    createdAt          DateTime        @default(now())
+    user               User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+    product            Product?        @relation(fields: [productId], references: [id])
+    order              Order?          @relation(fields: [orderId], references: [id])
     activationLogs     ActivationLog[]
-
-    @@map("desktop_licenses")
 }
+
+// ─── Desktop Activation ───────────────────────────────────────
 
 model ActivationLog {
-    id        Int            @id @default(autoincrement())
-    licenseId String         @map("license_id")
-    hwidHash  String         @map("hwid_hash")
-    ipAddress String?        @map("ip_address")
-    timestamp DateTime       @default(now())
-    license   DesktopLicense @relation(fields: [licenseId], references: [id])
+    id        Int      @id @default(autoincrement())
+    licenseId String   @map("license_id")
+    hwidHash  String   @map("hwid_hash")
+    ipAddress String?  @map("ip_address")
+    timestamp DateTime @default(now())
+    license   License  @relation(fields: [licenseId], references: [id])
 
     @@map("activation_logs")
 }

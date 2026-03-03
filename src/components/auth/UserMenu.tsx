@@ -4,7 +4,7 @@ import { useSession, signOut } from "next-auth/react";
 import { Link } from "@/lib/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useRef, useEffect } from "react";
-import { LogOut, LayoutDashboard, User } from "lucide-react";
+import { LogOut, LayoutDashboard, User, Shield } from "lucide-react";
 
 export default function UserMenu() {
     const { data: session, status } = useSession();
@@ -87,6 +87,15 @@ export default function UserMenu() {
                     >
                         <User className="w-4 h-4" />
                         {t("profile") ?? "Profile"}
+                    </Link>
+
+                    <Link
+                        href="/admin"
+                        onClick={() => setOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 text-sm text-text-secondary hover:text-amber-400 hover:bg-bg-hover rounded-lg transition-colors"
+                    >
+                        <Shield className="w-4 h-4" />
+                        Admin
                     </Link>
 
                     <button

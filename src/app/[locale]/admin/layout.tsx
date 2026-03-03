@@ -37,7 +37,7 @@ async function AdminGuard({ locale }: { locale: string }) {
 const navItems = [
     { href: "", icon: LayoutDashboard, label: "dashboard" },
     { href: "/users", icon: Users, label: "users" },
-    { href: "/desktop-licenses", icon: Key, label: "desktopLicenses" },
+    { href: "/desktop-licenses", icon: Key, label: "licenses" },
     { href: "/orders", icon: ShoppingCart, label: "orders" },
     { href: "/blog", icon: FileText, label: "blog" },
 ];
