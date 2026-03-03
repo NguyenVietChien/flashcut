@@ -122,6 +122,11 @@ model Order {
     user            User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
     product         Product?  @relation(fields: [productId], references: [id])
     license         License?
+
+    @@index([userId])
+    @@index([status])
+    @@index([createdAt])
+    @@index([productId])
 }
 
 // ─── Unified License ──────────────────────────────────────────
@@ -152,6 +157,13 @@ model License {
     product            Product?        @relation(fields: [productId], references: [id])
     order              Order?          @relation(fields: [orderId], references: [id])
     activationLogs     ActivationLog[]
+
+    @@index([userId])
+    @@index([productId])
+    @@index([status])
+    @@index([email])
+    @@index([hwidHash])
+    @@index([createdAt])
 }
 
 // ─── Desktop Activation ───────────────────────────────────────
@@ -164,6 +176,8 @@ model ActivationLog {
     timestamp DateTime @default(now())
     license   License  @relation(fields: [licenseId], references: [id])
 
+    @@index([licenseId])
+    @@index([hwidHash])
     @@map("activation_logs")
 }
 
