@@ -21,6 +21,7 @@ export default async function HomePage() {
             slug: true,
             name: true,
             priceVnd: true,
+            priceUsd: true,
             features: true,
             display: {
                 select: {

@@ -77,6 +77,7 @@ export interface PricingPlan {
     slug: string;
     name: string;
     priceVnd: number;
+    priceUsd: number | null;
     features: { vi: FeatureGroup[]; en: FeatureGroup[] } | null;
     display: {
         taglineVi: string | null;
@@ -163,8 +164,12 @@ export default function Pricing({ plans, locale }: PricingProps) {
 
                         const featureCount = featureGroups.reduce((sum, g) => sum + g.items.length, 0);
 
-                        // Format price: 400000 → "400,000"
-                        const formattedPrice = new Intl.NumberFormat("vi-VN").format(plan.priceVnd);
+                        // Format price: locale-aware currency
+                        const formattedPrice = isVi
+                            ? new Intl.NumberFormat("vi-VN").format(plan.priceVnd) + "đ"
+                            : plan.priceUsd
+                                ? "$" + new Intl.NumberFormat("en-US").format(plan.priceUsd)
+                                : new Intl.NumberFormat("vi-VN").format(plan.priceVnd) + "đ";
 
                         return (
                             <motion.div
@@ -213,10 +218,10 @@ export default function Pricing({ plans, locale }: PricingProps) {
                                     {/* Price */}
                                     <div className="mb-1">
                                         <span className={`text-5xl font-extrabold ${isUltra ? "text-gold" : "text-text-primary"}`}>
-                                            {t("currency")}{formattedPrice}
+                                            {formattedPrice}
                                         </span>
                                         <span className="text-text-secondary text-sm ml-1">
-                                            {t("period")}
+                                            /{isVi ? "tháng" : "month"}
                                         </span>
                                     </div>
 
