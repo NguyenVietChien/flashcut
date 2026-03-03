@@ -5,11 +5,8 @@ const GITHUB_API = "https://api.github.com";
 
 function getGitHubConfig() {
     const token = process.env.GITHUB_TOKEN;
-    const repo = process.env.GITHUB_REPO; // e.g. "NguyenVietChien/flashcut"
-    const branch = process.env.GITHUB_BRANCH || "main";
-
-    if (!token || !repo) return null;
-    return { token, repo, branch };
+    if (!token) return null;
+    return { token, repo: "NguyenVietChien/flashcut", branch: "main" };
 }
 
 function headers(token: string) {
