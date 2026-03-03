@@ -624,6 +624,18 @@
         "noProducts": "No products yet",
         "days": "days",
         "optional": "Optional",
-        "blog": "Blog"
+        "blog": "Blog",
+        "searchEmail": "Search email, name...",
+        "searchLicense": "Search key, email...",
+        "allStatuses": "All Statuses",
+        "allPlans": "All Plans",
+        "allTiers": "All Tiers",
+        "allRoles": "All Roles",
+        "sortNewest": "Newest first",
+        "sortOldest": "Oldest first",
+        "sortAmountHigh": "Amount ↓",
+        "sortAmountLow": "Amount ↑",
+        "sortExpiring": "Expiring soon",
+        "clearFilters": "Clear"
     }
 }

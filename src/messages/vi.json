@@ -624,6 +624,18 @@
         "noProducts": "Chưa có sản phẩm nào",
         "days": "ngày",
         "optional": "Tùy chọn",
-        "blog": "Blog"
+        "blog": "Blog",
+        "searchEmail": "Tìm email, tên...",
+        "searchLicense": "Tìm key, email...",
+        "allStatuses": "Tất cả trạng thái",
+        "allPlans": "Tất cả gói",
+        "allTiers": "Tất cả tier",
+        "allRoles": "Tất cả vai trò",
+        "sortNewest": "Mới nhất",
+        "sortOldest": "Cũ nhất",
+        "sortAmountHigh": "Số tiền ↓",
+        "sortAmountLow": "Số tiền ↑",
+        "sortExpiring": "Sắp hết hạn",
+        "clearFilters": "Xóa bộ lọc"
     }
 }

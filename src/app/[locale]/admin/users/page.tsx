@@ -1,19 +1,45 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import { EditRoleButton, DeleteUserButton } from "./components";
+import { FilterBar } from "@/components/admin/FilterBar";
+import { Suspense } from "react";
 
-export default async function AdminUsersPage() {
+type SearchParams = Promise<{ [key: string]: string | undefined }>;
+
+async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
     const t = await getTranslations("admin");
     const session = await auth();
     const currentUserId = session?.user?.id;
+    const params = await searchParams;
+
+    // Build Prisma where clause
+    const where: Prisma.UserWhereInput = {};
+
+    if (params.role) {
+        where.role = params.role;
+    }
+    if (params.q) {
+        const q = params.q;
+        where.OR = [
+            { name: { contains: q, mode: "insensitive" } },
+            { email: { contains: q, mode: "insensitive" } },
+        ];
+    }
+
+    // Build orderBy
+    let orderBy: Prisma.UserOrderByWithRelationInput = { createdAt: "desc" };
+    if (params.sort === "oldest") orderBy = { createdAt: "asc" };
 
     const users = await prisma.user.findMany({
-        orderBy: { createdAt: "desc" },
+        where,
+        orderBy,
         include: {
             licenses: { select: { plan: true, status: true }, take: 1, orderBy: { activatedAt: "desc" } },
             _count: { select: { orders: true } },
         },
+        take: 100,
     });
 
     const labels = {
@@ -26,10 +52,29 @@ export default async function AdminUsersPage() {
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-text-primary">{t("users")}</h1>
-                <span className="text-sm text-text-tertiary">{users.length} {t("total")}</span>
             </div>
+
+            <FilterBar
+                searchPlaceholder={t("searchEmail")}
+                filters={[
+                    {
+                        key: "role",
+                        label: "Role",
+                        allLabel: t("allRoles"),
+                        options: [
+                            { value: "user", label: "User" },
+                            { value: "admin", label: "Admin" },
+                        ],
+                    },
+                ]}
+                sortOptions={[
+                    { value: "", label: t("sortNewest") },
+                    { value: "oldest", label: t("sortOldest") },
+                ]}
+                totalLabel={`${users.length} ${t("total")}`}
+            />
 
             <div className="glass-card overflow-hidden">
                 <div className="overflow-x-auto">
@@ -93,5 +138,13 @@ export default async function AdminUsersPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default async function AdminUsersPage({ searchParams }: { searchParams: SearchParams }) {
+    return (
+        <Suspense>
+            <UsersContent searchParams={searchParams} />
+        </Suspense>
     );
 }

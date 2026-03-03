@@ -1,17 +1,71 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 import { CreateLicenseButton, EditLicenseButton, ResetHwidButton, DeleteLicenseButton } from "./components";
+import { FilterBar } from "@/components/admin/FilterBar";
+import { Suspense } from "react";
 
-export default async function AdminLicensesPage() {
+type SearchParams = Promise<{ [key: string]: string | undefined }>;
+
+async function LicensesContent({ searchParams }: { searchParams: SearchParams }) {
     const t = await getTranslations("admin");
+    const params = await searchParams;
+
+    // Build Prisma where clause
+    const where: Prisma.LicenseWhereInput = {};
+
+    if (params.status) {
+        if (params.status === "expired") {
+            where.status = "active";
+            where.expiresAt = { lt: new Date() };
+        } else if (params.status === "active") {
+            where.status = "active";
+            where.OR = [
+                { expiresAt: null },
+                { expiresAt: { gte: new Date() } },
+            ];
+        } else {
+            where.status = params.status;
+        }
+    }
+    if (params.plan) {
+        where.plan = params.plan;
+    }
+    if (params.tier) {
+        where.tier = params.tier;
+    }
+    if (params.q) {
+        const q = params.q;
+        // Reset OR if status=active already set it
+        const searchOr = [
+            { key: { contains: q, mode: "insensitive" as const } },
+            { email: { contains: q, mode: "insensitive" as const } },
+            { contactInfo: { contains: q, mode: "insensitive" as const } },
+            { user: { email: { contains: q, mode: "insensitive" as const } } },
+        ];
+        if (where.OR) {
+            // Combine with existing OR (from status=active)
+            where.AND = [{ OR: where.OR }, { OR: searchOr }];
+            delete where.OR;
+        } else {
+            where.OR = searchOr;
+        }
+    }
+
+    // Build orderBy
+    let orderBy: Prisma.LicenseOrderByWithRelationInput = { createdAt: "desc" };
+    if (params.sort === "oldest") orderBy = { createdAt: "asc" };
+    if (params.sort === "expiring") orderBy = { expiresAt: "asc" };
 
     const licenses = await prisma.license.findMany({
-        orderBy: { createdAt: "desc" },
+        where,
+        orderBy,
         include: {
             product: true,
             user: { select: { name: true, email: true } },
             _count: { select: { activationLogs: true } },
         },
+        take: 100,
     });
 
     const labels = {
@@ -44,13 +98,42 @@ export default async function AdminLicensesPage() {
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
-                <div>
-                    <h1 className="text-2xl font-bold text-text-primary">Licenses</h1>
-                    <p className="text-sm text-text-tertiary mt-1">{licenses.length} {t("total")}</p>
-                </div>
+            <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-bold text-text-primary">Licenses</h1>
                 <CreateLicenseButton labels={labels} />
             </div>
+
+            <FilterBar
+                searchPlaceholder={t("searchLicense")}
+                filters={[
+                    {
+                        key: "status",
+                        label: "Status",
+                        allLabel: t("allStatuses"),
+                        options: [
+                            { value: "active", label: t("active") },
+                            { value: "expired", label: t("expired") },
+                            { value: "revoked", label: t("inactive") },
+                        ],
+                    },
+                    {
+                        key: "tier",
+                        label: "Tier",
+                        allLabel: t("allTiers"),
+                        options: [
+                            { value: "basic", label: "Basic" },
+                            { value: "pro", label: "Pro" },
+                            { value: "ultra", label: "Ultra" },
+                        ],
+                    },
+                ]}
+                sortOptions={[
+                    { value: "", label: t("sortNewest") },
+                    { value: "oldest", label: t("sortOldest") },
+                    { value: "expiring", label: t("sortExpiring") },
+                ]}
+                totalLabel={`${licenses.length} ${t("total")}`}
+            />
 
             <div className="glass-card overflow-hidden">
                 <div className="overflow-x-auto">
@@ -147,5 +230,13 @@ export default async function AdminLicensesPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default async function AdminLicensesPage({ searchParams }: { searchParams: SearchParams }) {
+    return (
+        <Suspense>
+            <LicensesContent searchParams={searchParams} />
+        </Suspense>
     );
 }

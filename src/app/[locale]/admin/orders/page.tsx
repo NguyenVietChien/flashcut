@@ -1,16 +1,48 @@
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 import { UpdateStatusButton, DeleteOrderButton } from "./components";
+import { FilterBar } from "@/components/admin/FilterBar";
+import { Suspense } from "react";
 
-export default async function AdminOrdersPage() {
+type SearchParams = Promise<{ [key: string]: string | undefined }>;
+
+async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
     const t = await getTranslations("admin");
+    const params = await searchParams;
+
+    // Build Prisma where clause from URL params
+    const where: Prisma.OrderWhereInput = {};
+
+    if (params.status) {
+        where.status = params.status;
+    }
+    if (params.plan) {
+        where.plan = params.plan;
+    }
+    if (params.q) {
+        const q = params.q;
+        where.OR = [
+            { buyerEmail: { contains: q, mode: "insensitive" } },
+            { user: { name: { contains: q, mode: "insensitive" } } },
+            { user: { email: { contains: q, mode: "insensitive" } } },
+        ];
+    }
+
+    // Build orderBy from sort param
+    let orderBy: Prisma.OrderOrderByWithRelationInput = { createdAt: "desc" };
+    if (params.sort === "oldest") orderBy = { createdAt: "asc" };
+    if (params.sort === "amount_high") orderBy = { amount: "desc" };
+    if (params.sort === "amount_low") orderBy = { amount: "asc" };
 
     const orders = await prisma.order.findMany({
-        orderBy: { createdAt: "desc" },
+        where,
+        orderBy,
         include: {
             user: { select: { name: true, email: true } },
             license: { select: { key: true, status: true } },
         },
+        take: 100,
     });
 
     const labels = {
@@ -27,10 +59,43 @@ export default async function AdminOrdersPage() {
 
     return (
         <div>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold text-text-primary">{t("orders")}</h1>
-                <span className="text-sm text-text-tertiary">{orders.length} {t("total")}</span>
             </div>
+
+            <FilterBar
+                searchPlaceholder={t("searchEmail")}
+                filters={[
+                    {
+                        key: "status",
+                        label: "Status",
+                        allLabel: t("allStatuses"),
+                        options: [
+                            { value: "pending", label: t("pending") },
+                            { value: "paid", label: t("paid") },
+                            { value: "cancelled", label: t("cancelled") },
+                            { value: "refunded", label: t("refunded") },
+                        ],
+                    },
+                    {
+                        key: "plan",
+                        label: "Plan",
+                        allLabel: t("allPlans"),
+                        options: [
+                            { value: "basic", label: "Basic" },
+                            { value: "pro", label: "Pro" },
+                            { value: "ultra", label: "Ultra" },
+                        ],
+                    },
+                ]}
+                sortOptions={[
+                    { value: "", label: t("sortNewest") },
+                    { value: "oldest", label: t("sortOldest") },
+                    { value: "amount_high", label: t("sortAmountHigh") },
+                    { value: "amount_low", label: t("sortAmountLow") },
+                ]}
+                totalLabel={`${orders.length} ${t("total")}`}
+            />
 
             <div className="glass-card overflow-hidden">
                 <div className="overflow-x-auto">
@@ -109,5 +174,13 @@ export default async function AdminOrdersPage() {
                 </div>
             </div>
         </div>
+    );
+}
+
+export default async function AdminOrdersPage({ searchParams }: { searchParams: SearchParams }) {
+    return (
+        <Suspense>
+            <OrdersContent searchParams={searchParams} />
+        </Suspense>
     );
 }
