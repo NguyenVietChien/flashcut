@@ -2,7 +2,20 @@
 
 import { useState } from "react";
 import { createProduct, updateProduct, deleteProduct, createPlan, updatePlan, deletePlan } from "./actions";
-import { Plus, Pencil, Trash2, X, ChevronDown, ChevronRight, Package } from "lucide-react";
+import { Plus, Pencil, Trash2, X, ChevronDown, ChevronRight, Package, Star, Eye } from "lucide-react";
+
+type DisplayData = {
+    id: string;
+    taglineVi: string | null;
+    taglineEn: string | null;
+    highlightVi: string | null;
+    highlightEn: string | null;
+    ctaVi: string | null;
+    ctaEn: string | null;
+    emoji: string | null;
+    sortOrder: number;
+    isFeatured: boolean;
+};
 
 type PlanData = {
     id: string;
@@ -14,6 +27,9 @@ type PlanData = {
     maxActivations: number;
     usageLimit: number | null;
     isActive: boolean;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    features: any;
+    display: DisplayData | null;
 };
 
 type ProductData = {
@@ -225,8 +241,8 @@ export function ProductRow({ product, labels }: { product: ProductData; labels: 
                 <td className="px-6 py-4 text-sm text-text-secondary font-mono">{product.slug}</td>
                 <td className="px-6 py-4">
                     <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${product.type === "desktop" ? "bg-blue-500/20 text-blue-400" :
-                            product.type === "web" ? "bg-green-500/20 text-green-400" :
-                                "bg-purple-500/20 text-purple-400"
+                        product.type === "web" ? "bg-green-500/20 text-green-400" :
+                            "bg-purple-500/20 text-purple-400"
                         }`}>
                         {product.type}
                     </span>
@@ -294,7 +310,15 @@ function PlanRow({ plan, productId, labels }: { plan: PlanData; productId: strin
     return (
         <>
             <tr className="hover:bg-bg-hover/50 transition-colors">
-                <td className="px-4 py-2.5 text-sm text-text-primary">{plan.name}</td>
+                <td className="px-4 py-2.5 text-sm text-text-primary">
+                    <div className="flex items-center gap-2">
+                        {plan.display?.emoji && <span>{plan.display.emoji}</span>}
+                        <span>{plan.name}</span>
+                        {plan.display?.isFeatured && (
+                            <Star className="w-3 h-3 text-yellow-400 fill-yellow-400" />
+                        )}
+                    </div>
+                </td>
                 <td className="px-4 py-2.5 text-sm text-text-secondary font-mono">{plan.slug}</td>
                 <td className="px-4 py-2.5 text-sm text-text-primary text-right font-medium">{formatVnd(plan.priceVnd)}</td>
                 <td className="px-4 py-2.5 text-sm text-text-secondary text-center">
@@ -406,6 +430,7 @@ function PlanForm({
             {plan && <input type="hidden" name="id" value={plan.id} />}
             {error && <p className="text-sm text-error bg-error/10 px-3 py-2 rounded-lg">{error}</p>}
 
+            {/* ─── Core plan fields ─── */}
             <div className="grid grid-cols-2 gap-4">
                 <Field label={labels.planName}>
                     <input name="name" required defaultValue={plan?.name} className="input-field" placeholder="Pro Monthly" />
@@ -445,10 +470,129 @@ function PlanForm({
                 </Field>
             )}
 
+            {/* ─── Display / Pricing Page ─── */}
+            <div className="border-t border-border-default pt-4 mt-4">
+                <div className="flex items-center gap-2 mb-4">
+                    <Eye className="w-4 h-4 text-accent" />
+                    <h4 className="text-sm font-semibold text-text-primary">Landing Page Display</h4>
+                </div>
+
+                <div className="grid grid-cols-3 gap-4">
+                    <Field label="Emoji" hint="⚡ 🚀 👑">
+                        <input name="emoji" defaultValue={plan?.display?.emoji || ""} className="input-field" placeholder="🚀" />
+                    </Field>
+                    <Field label="Sort Order" hint="0, 1, 2...">
+                        <input name="sortOrder" type="number" defaultValue={plan?.display?.sortOrder ?? 0} className="input-field" />
+                    </Field>
+                    <Field label="Featured">
+                        <select name="isFeatured" className="input-field" defaultValue={plan?.display?.isFeatured ? "true" : "false"}>
+                            <option value="false">No</option>
+                            <option value="true">⭐ Yes — Most Popular</option>
+                        </select>
+                    </Field>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <Field label="Tagline (VI)">
+                        <input name="taglineVi" defaultValue={plan?.display?.taglineVi || ""} className="input-field" placeholder="Có kịch bản? 1 click ra video" />
+                    </Field>
+                    <Field label="Tagline (EN)">
+                        <input name="taglineEn" defaultValue={plan?.display?.taglineEn || ""} className="input-field" placeholder="Got a script? One click to video" />
+                    </Field>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <Field label="Highlight (VI)" hint="Badge phụ">
+                        <input name="highlightVi" defaultValue={plan?.display?.highlightVi || ""} className="input-field" placeholder="Tất cả Basic, thêm" />
+                    </Field>
+                    <Field label="Highlight (EN)">
+                        <input name="highlightEn" defaultValue={plan?.display?.highlightEn || ""} className="input-field" placeholder="Everything in Basic, plus" />
+                    </Field>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 mt-4">
+                    <Field label="CTA Button (VI)">
+                        <input name="ctaVi" defaultValue={plan?.display?.ctaVi || ""} className="input-field" placeholder="Nâng Cấp Ngay" />
+                    </Field>
+                    <Field label="CTA Button (EN)">
+                        <input name="ctaEn" defaultValue={plan?.display?.ctaEn || ""} className="input-field" placeholder="Upgrade Now" />
+                    </Field>
+                </div>
+            </div>
+
+            {/* ─── Features JSON ─── */}
+            <PlanFeaturesEditor features={plan?.features} />
+
             <div className="flex justify-end gap-3 pt-2">
                 <button type="button" onClick={onCancel} className="btn-cancel">{labels.cancel}</button>
                 <button type="submit" className="btn-primary">{labels.save}</button>
             </div>
         </form>
+    );
+}
+
+/* ─── Features JSON Editor ─── */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function PlanFeaturesEditor({ features }: { features?: any }) {
+    const [expanded, setExpanded] = useState(false);
+    const [jsonError, setJsonError] = useState<string | null>(null);
+    const [value, setValue] = useState(() => {
+        if (!features) return "";
+        try { return JSON.stringify(features, null, 2); } catch { return ""; }
+    });
+
+    const handleChange = (v: string) => {
+        setValue(v);
+        if (!v.trim()) { setJsonError(null); return; }
+        try {
+            const parsed = JSON.parse(v);
+            if (!parsed.vi || !parsed.en) {
+                setJsonError("Must have 'vi' and 'en' keys");
+            } else {
+                setJsonError(null);
+            }
+        } catch {
+            setJsonError("Invalid JSON");
+        }
+    };
+
+    return (
+        <div className="border-t border-border-default pt-4 mt-4">
+            <button
+                type="button"
+                onClick={() => setExpanded(!expanded)}
+                className="flex items-center gap-2 text-sm font-semibold text-text-primary hover:text-accent transition-colors cursor-pointer"
+            >
+                {expanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                Features JSON
+                {value && <span className="text-xs text-text-tertiary font-normal">(has data)</span>}
+            </button>
+
+            {expanded && (
+                <div className="mt-3 space-y-2">
+                    <p className="text-xs text-text-tertiary">
+                        Format: {`{ "vi": [{ "group": "...", "icon": "film", "items": ["..."] }], "en": [...] }`}
+                    </p>
+                    <textarea
+                        name="features"
+                        value={value}
+                        onChange={(e) => handleChange(e.target.value)}
+                        className={`input-field font-mono text-xs ${jsonError ? "!border-error" : ""}`}
+                        rows={12}
+                        placeholder='{ "vi": [...], "en": [...] }'
+                        spellCheck={false}
+                    />
+                    {jsonError && (
+                        <p className="text-xs text-error">{jsonError}</p>
+                    )}
+                    {!jsonError && value && (
+                        <p className="text-xs text-success">✓ Valid JSON</p>
+                    )}
+                </div>
+            )}
+
+            {/* Hidden input to submit the value even when collapsed */}
+            {!expanded && <input type="hidden" name="features" value={value} />}
+        </div>
     );
 }
