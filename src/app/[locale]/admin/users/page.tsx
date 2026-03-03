@@ -4,7 +4,8 @@ import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import { EditRoleButton, DeleteUserButton } from "./components";
 import { FilterBar } from "@/components/admin/FilterBar";
-import { Pagination, PAGE_SIZE } from "@/components/admin/Pagination";
+import { Pagination } from "@/components/admin/Pagination";
+import { PAGE_SIZE } from "@/lib/constants";
 import { Suspense } from "react";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;

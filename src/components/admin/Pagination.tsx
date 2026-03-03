@@ -2,8 +2,7 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-
-const PAGE_SIZE = 20;
+import { PAGE_SIZE } from "@/lib/constants";
 
 export { PAGE_SIZE };
 
@@ -69,8 +68,8 @@ export function Pagination({
                             key={p}
                             onClick={() => goToPage(p)}
                             className={`min-w-[32px] h-8 rounded-lg text-sm font-medium transition-colors cursor-pointer ${p === currentPage
-                                    ? "bg-accent text-white"
-                                    : "hover:bg-bg-hover text-text-secondary"
+                                ? "bg-accent text-white"
+                                : "hover:bg-bg-hover text-text-secondary"
                                 }`}
                         >
                             {p}
