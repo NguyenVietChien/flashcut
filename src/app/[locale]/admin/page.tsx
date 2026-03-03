@@ -5,17 +5,45 @@ import { Users, Key, ShoppingCart, TrendingUp } from "lucide-react";
 export default async function AdminDashboard() {
     const t = await getTranslations("admin");
 
-    const [userCount, licenseCount, orderCount, paidOrderCount] = await Promise.all([
+    // ─── Batch all queries in a single Promise.all (was 20+ queries, now 6) ───
+    const now = new Date();
+    const weekStart = new Date(now);
+    weekStart.setDate(now.getDate() - 6);
+    weekStart.setHours(0, 0, 0, 0);
+
+    const [
+        userCount, licenseCount, orderCount, paidOrderCount,
+        recentUsers, recentOrders,
+        paidOrdersWeek, newUsersWeek,
+    ] = await Promise.all([
         prisma.user.count(),
         prisma.license.count(),
         prisma.order.count(),
         prisma.order.count({ where: { status: "paid" } }),
+        prisma.user.findMany({
+            take: 5,
+            orderBy: { createdAt: "desc" },
+            select: { id: true, name: true, email: true, role: true, createdAt: true },
+        }),
+        prisma.order.findMany({
+            take: 5,
+            orderBy: { createdAt: "desc" },
+            include: { user: { select: { email: true } } },
+        }),
+        // Fetch all paid orders this week in ONE query
+        prisma.order.findMany({
+            where: { status: "paid", paidAt: { gte: weekStart } },
+            select: { amount: true, paidAt: true },
+        }),
+        // Fetch all new users this week in ONE query
+        prisma.user.findMany({
+            where: { createdAt: { gte: weekStart } },
+            select: { createdAt: true },
+        }),
     ]);
 
-    // Revenue data — last 7 days
-    const now = new Date();
+    // ─── Group by day in JS (avoids 14 DB queries) ───
     const last7Days: { label: string; revenue: number; users: number }[] = [];
-
     for (let i = 6; i >= 0; i--) {
         const dayStart = new Date(now);
         dayStart.setDate(now.getDate() - i);
@@ -23,19 +51,16 @@ export default async function AdminDashboard() {
         const dayEnd = new Date(dayStart);
         dayEnd.setHours(23, 59, 59, 999);
 
-        const [dayRevenue, dayUsers] = await Promise.all([
-            prisma.order.aggregate({
-                _sum: { amount: true },
-                where: { status: "paid", paidAt: { gte: dayStart, lte: dayEnd } },
-            }),
-            prisma.user.count({
-                where: { createdAt: { gte: dayStart, lte: dayEnd } },
-            }),
-        ]);
+        const dayRevenue = paidOrdersWeek
+            .filter((o) => o.paidAt && o.paidAt >= dayStart && o.paidAt <= dayEnd)
+            .reduce((sum, o) => sum + o.amount, 0);
+
+        const dayUsers = newUsersWeek
+            .filter((u) => u.createdAt >= dayStart && u.createdAt <= dayEnd).length;
 
         last7Days.push({
             label: dayStart.toLocaleDateString("vi-VN", { weekday: "short", day: "numeric" }),
-            revenue: dayRevenue._sum.amount || 0,
+            revenue: dayRevenue,
             users: dayUsers,
         });
     }
@@ -44,18 +69,6 @@ export default async function AdminDashboard() {
     const maxUsers = Math.max(...last7Days.map((d) => d.users), 1);
     const totalRevenue = last7Days.reduce((sum, d) => sum + d.revenue, 0);
     const totalNewUsers = last7Days.reduce((sum, d) => sum + d.users, 0);
-
-    const recentUsers = await prisma.user.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        select: { id: true, name: true, email: true, role: true, createdAt: true },
-    });
-
-    const recentOrders = await prisma.order.findMany({
-        take: 5,
-        orderBy: { createdAt: "desc" },
-        include: { user: { select: { email: true } } },
-    });
 
     const cards = [
         { icon: Users, label: t("totalUsers"), value: userCount, color: "text-accent", bg: "bg-accent/10" },

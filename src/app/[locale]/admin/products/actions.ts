@@ -1,15 +1,9 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin-guard";
 
-async function requireAdmin() {
-    const session = await auth();
-    if (!session?.user?.id) throw new Error("Unauthorized");
-    if (session.user.role !== "admin") throw new Error("Forbidden");
-    return session.user;
-}
 
 // ─── Product Actions ─────────────────────────────────────────
 

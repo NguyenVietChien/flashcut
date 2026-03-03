@@ -1,21 +1,9 @@
 "use server";
 
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { requireAdmin } from "@/lib/admin-guard";
 
-async function requireAdmin() {
-    const session = await auth();
-    if (!session?.user?.id) throw new Error("Unauthorized");
-
-    const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { role: true },
-    });
-
-    if (!user || user.role !== "admin") throw new Error("Forbidden");
-    return session.user;
-}
 
 export async function updateOrderStatus(formData: FormData) {
     await requireAdmin();
