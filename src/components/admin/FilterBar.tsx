@@ -2,7 +2,15 @@
 
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useCallback, useState, useEffect, useTransition } from "react";
-import { Search, X, SlidersHorizontal } from "lucide-react";
+import { Search, X, ArrowUpDown, RotateCcw } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 type FilterOption = {
     label: string;
@@ -21,6 +29,7 @@ type SortOption = {
     value: string;
 };
 
+/* ── FilterBar ─────────────────────────────────────────── */
 export function FilterBar({
     filters = [],
     sortOptions = [],
@@ -50,6 +59,8 @@ export function FilterBar({
             } else {
                 params.delete(key);
             }
+            // Reset page when filter changes
+            params.delete("page");
             startTransition(() => {
                 router.push(`${pathname}?${params.toString()}`, { scroll: false });
             });
@@ -79,17 +90,17 @@ export function FilterBar({
     };
 
     return (
-        <div className={`flex flex-wrap items-center gap-3 mb-6 ${isPending ? "opacity-70" : ""}`}>
+        <div className={`flex flex-wrap items-center gap-2.5 mb-6 ${isPending ? "opacity-60 pointer-events-none" : ""}`}>
             {/* Search */}
             {showSearch && (
-                <div className="relative flex-1 min-w-[200px] max-w-xs">
+                <div className="relative w-full sm:w-auto sm:min-w-[180px] sm:max-w-[240px]">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
-                    <input
+                    <Input
                         type="text"
                         value={searchValue}
                         onChange={(e) => setSearchValue(e.target.value)}
                         placeholder={searchPlaceholder}
-                        className="input-field pl-9 pr-8 py-2 text-sm"
+                        className="w-full pl-9 pr-8 bg-bg-secondary"
                     />
                     {searchValue && (
                         <button
@@ -102,52 +113,74 @@ export function FilterBar({
                 </div>
             )}
 
-            {/* Filter dropdowns */}
-            {filters.map((filter) => (
-                <select
-                    key={filter.key}
-                    value={searchParams.get(filter.key) || ""}
-                    onChange={(e) => updateParam(filter.key, e.target.value)}
-                    className="input-field py-2 text-sm min-w-[120px] cursor-pointer"
-                >
-                    <option value="">{filter.allLabel}</option>
-                    {filter.options.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                        </option>
-                    ))}
-                </select>
-            ))}
+            {/* Divider */}
+            {showSearch && (filters.length > 0 || sortOptions.length > 0) && (
+                <div className="w-px h-6 bg-border-default" />
+            )}
+
+            {/* Filter dropdowns — shadcn Select */}
+            {filters.map((filter) => {
+                const currentVal = searchParams.get(filter.key) || "";
+                return (
+                    <Select
+                        key={filter.key}
+                        value={currentVal || "__all__"}
+                        onValueChange={(val) => updateParam(filter.key, val === "__all__" ? "" : val)}
+                    >
+                        <SelectTrigger
+                            className={`bg-bg-secondary text-sm h-9 min-w-[120px] ${currentVal
+                                ? "border-accent/40 bg-accent/10 text-accent"
+                                : "border-border-default text-text-secondary hover:bg-bg-hover"
+                                }`}
+                        >
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="__all__">{filter.allLabel}</SelectItem>
+                            {filter.options.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                );
+            })}
 
             {/* Sort dropdown */}
             {sortOptions.length > 0 && (
-                <select
-                    value={searchParams.get("sort") || ""}
-                    onChange={(e) => updateParam("sort", e.target.value)}
-                    className="input-field py-2 text-sm min-w-[140px] cursor-pointer"
+                <Select
+                    value={searchParams.get("sort") || "__default__"}
+                    onValueChange={(val) => updateParam("sort", val === "__default__" ? "" : val)}
                 >
-                    {sortOptions.map((opt) => (
-                        <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                        </option>
-                    ))}
-                </select>
+                    <SelectTrigger className="bg-bg-secondary border-border-default text-text-secondary text-sm h-9 min-w-[120px] hover:bg-bg-hover">
+                        <ArrowUpDown className="w-3.5 h-3.5 mr-1" />
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {sortOptions.map((opt) => (
+                            <SelectItem key={opt.value || "__default__"} value={opt.value || "__default__"}>
+                                {opt.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
             )}
 
-            {/* Active filter indicator + clear */}
+            {/* Clear filters */}
             {hasActiveFilters && (
                 <button
                     onClick={clearAll}
-                    className="flex items-center gap-1.5 text-xs px-3 py-2 rounded-lg bg-accent/10 text-accent hover:bg-accent/20 transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs px-2.5 py-2 rounded-lg text-text-tertiary hover:text-error hover:bg-error/10 transition-colors cursor-pointer"
+                    title="Clear all filters"
                 >
-                    <SlidersHorizontal className="w-3.5 h-3.5" />
-                    Clear
+                    <RotateCcw className="w-3.5 h-3.5" />
                 </button>
             )}
 
             {/* Total label */}
             {totalLabel && (
-                <span className="text-sm text-text-tertiary ml-auto">{totalLabel}</span>
+                <span className="text-sm text-text-tertiary ml-auto tabular-nums">{totalLabel}</span>
             )}
         </div>
     );

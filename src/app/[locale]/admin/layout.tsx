@@ -3,17 +3,7 @@ import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { isAdminVerified } from "@/lib/admin-auth";
 import AdminPinGate from "@/components/admin/AdminPinGate";
-import {
-    LayoutDashboard,
-    Users,
-    Key,
-    ShoppingCart,
-    FileText,
-    Shield,
-    LogOut,
-    Package,
-} from "lucide-react";
-import Link from "next/link";
+import AdminSidebar from "@/components/admin/AdminSidebar";
 
 async function AdminGuard({ locale }: { locale: string }) {
     const session = await auth();
@@ -29,15 +19,6 @@ async function AdminGuard({ locale }: { locale: string }) {
 
     return { email: session.user.email, name: session.user.name };
 }
-
-const navItems = [
-    { href: "", icon: LayoutDashboard, label: "dashboard" },
-    { href: "/products", icon: Package, label: "products" },
-    { href: "/users", icon: Users, label: "users" },
-    { href: "/desktop-licenses", icon: Key, label: "licenses" },
-    { href: "/orders", icon: ShoppingCart, label: "orders" },
-    { href: "/blog", icon: FileText, label: "blog" },
-];
 
 export default async function AdminLayout({
     children,
@@ -68,49 +49,23 @@ export default async function AdminLayout({
         return <AdminPinGate labels={pinLabels} />;
     }
 
+    const sidebarLabels: Record<string, string> = {
+        dashboard: t("dashboard"),
+        products: t("products"),
+        users: t("users"),
+        licenses: t("licenses"),
+        orders: t("orders"),
+        blog: t("blog"),
+        backToSite: t("backToSite"),
+    };
+
     return (
-        <div className="min-h-screen pt-16 flex bg-bg-primary">
-            {/* Sidebar */}
-            <aside className="w-64 border-r border-border-default bg-bg-secondary flex flex-col sticky top-16 h-[calc(100vh-4rem)]">
-                <div className="p-6 border-b border-border-default">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
-                            <Shield className="w-5 h-5 text-accent" />
-                        </div>
-                        <div>
-                            <h1 className="text-base font-bold text-text-primary">FlashCut Admin</h1>
-                            <p className="text-sm text-text-tertiary">{admin.email}</p>
-                        </div>
-                    </div>
-                </div>
+        <div className="admin-layout min-h-screen pt-16 flex bg-bg-primary">
+            <AdminSidebar locale={locale} email={admin.email} labels={sidebarLabels} />
 
-                <nav className="flex-1 p-4 space-y-1">
-                    {navItems.map((item) => (
-                        <Link
-                            key={item.label}
-                            href={`/${locale}/admin${item.href}`}
-                            className="flex items-center gap-3 px-3 py-3 rounded-lg text-base text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors group"
-                        >
-                            <item.icon className="w-5 h-5 text-text-tertiary group-hover:text-accent transition-colors" />
-                            {t(item.label)}
-                        </Link>
-                    ))}
-                </nav>
-
-                <div className="p-4 border-t border-border-default">
-                    <Link
-                        href={`/${locale}/dashboard`}
-                        className="flex items-center gap-3 px-3 py-3 rounded-lg text-base text-text-tertiary hover:bg-bg-hover hover:text-text-primary transition-colors"
-                    >
-                        <LogOut className="w-5 h-5" />
-                        {t("backToSite")}
-                    </Link>
-                </div>
-            </aside>
-
-            {/* Main Content */}
-            <main className="flex-1 overflow-auto">
-                <div className="max-w-7xl mx-auto p-8">
+            {/* Main Content — offset for mobile top bar */}
+            <main className="flex-1 overflow-auto pt-12 lg:pt-0">
+                <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
                     {children}
                 </div>
             </main>

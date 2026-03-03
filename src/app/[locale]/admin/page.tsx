@@ -79,7 +79,7 @@ export default async function AdminDashboard() {
 
     return (
         <div>
-            <h1 className="text-2xl font-bold text-text-primary mb-8">{t("dashboard")}</h1>
+            <h1 className="text-xl font-bold text-text-primary mb-8">{t("dashboard")}</h1>
 
             {/* Stats Cards */}
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">

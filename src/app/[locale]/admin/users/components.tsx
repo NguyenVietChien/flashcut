@@ -2,7 +2,25 @@
 
 import { useState } from "react";
 import { updateUserRole, deleteUser } from "./actions";
-import { Pencil, Trash2, X } from "lucide-react";
+import { Pencil } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+    DialogFooter,
+    DialogClose,
+} from "@/components/ui/dialog";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog";
 
 /* ─── Edit Role Button ─── */
 export function EditRoleButton({
@@ -13,42 +31,57 @@ export function EditRoleButton({
     labels: Record<string, string>;
 }) {
     const [open, setOpen] = useState(false);
+    const [role, setRole] = useState(user.role);
 
     return (
-        <>
-            <button onClick={() => setOpen(true)} className="action-btn" title={labels.editRole}>
-                <Pencil className="w-3.5 h-3.5" />
-            </button>
-
-            {open && (
-                <Modal onClose={() => setOpen(false)} title={labels.editRole}>
-                    <form
-                        action={async (fd) => {
-                            await updateUserRole(fd);
-                            setOpen(false);
-                        }}
-                        className="space-y-4"
-                    >
-                        <input type="hidden" name="id" value={user.id} />
-                        <div className="mb-3">
-                            <p className="text-sm text-text-primary font-medium">{user.name || "—"}</p>
-                            <p className="text-xs text-text-tertiary">{user.email}</p>
-                        </div>
-                        <div>
-                            <label className="block text-sm font-medium text-text-secondary mb-1.5">Role</label>
-                            <select name="role" defaultValue={user.role} className="input-field">
-                                <option value="user">User</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                        </div>
-                        <div className="flex justify-end gap-3 pt-2">
-                            <button type="button" onClick={() => setOpen(false)} className="btn-cancel">{labels.cancel}</button>
-                            <button type="submit" className="btn-primary">{labels.save}</button>
-                        </div>
-                    </form>
-                </Modal>
-            )}
-        </>
+        <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setRole(user.role); }}>
+            <DialogTrigger asChild>
+                <button className="action-btn" title={labels.editRole}>
+                    <Pencil className="w-3.5 h-3.5" />
+                </button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>{labels.editRole}</DialogTitle>
+                </DialogHeader>
+                <form
+                    action={async (fd) => {
+                        await updateUserRole(fd);
+                        setOpen(false);
+                    }}
+                    className="space-y-4"
+                >
+                    <input type="hidden" name="id" value={user.id} />
+                    <input type="hidden" name="role" value={role} />
+                    <div className="mb-3">
+                        <p className="text-sm text-text-primary font-medium">{user.name || "—"}</p>
+                        <p className="text-xs text-text-tertiary">{user.email}</p>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-text-secondary mb-1.5">Role</label>
+                        <Select value={role} onValueChange={setRole}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="user">User</SelectItem>
+                                <SelectItem value="admin">Admin</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="outline" className="border-border-default text-text-secondary hover:bg-bg-hover">
+                                {labels.cancel}
+                            </Button>
+                        </DialogClose>
+                        <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                            {labels.save}
+                        </Button>
+                    </DialogFooter>
+                </form>
+            </DialogContent>
+        </Dialog>
     );
 }
 
@@ -62,46 +95,16 @@ export function DeleteUserButton({
     isCurrentUser: boolean;
     labels: Record<string, string>;
 }) {
-    const [confirming, setConfirming] = useState(false);
-
     if (isCurrentUser) return null;
 
-    if (confirming) {
-        return (
-            <div className="flex items-center gap-1">
-                <form action={async (fd) => { await deleteUser(fd); setConfirming(false); }}>
-                    <input type="hidden" name="id" value={userId} />
-                    <button type="submit" className="text-xs px-2 py-1 rounded bg-error/20 text-error hover:bg-error/30 transition-colors cursor-pointer">
-                        {labels.confirm}
-                    </button>
-                </form>
-                <button onClick={() => setConfirming(false)} className="text-xs px-2 py-1 rounded bg-bg-tertiary text-text-secondary hover:bg-bg-hover transition-colors cursor-pointer">
-                    {labels.cancel}
-                </button>
-            </div>
-        );
-    }
-
     return (
-        <button onClick={() => setConfirming(true)} className="action-btn text-error" title={labels.deleteUser}>
-            <Trash2 className="w-3.5 h-3.5" />
-        </button>
+        <ConfirmDeleteDialog
+            title={labels.deleteUser}
+            description="Permanently delete this user and all their data? This cannot be undone."
+            action={deleteUser}
+            hiddenFields={{ id: userId }}
+            labels={{ cancel: labels.cancel, confirm: labels.confirm }}
+        />
     );
 }
 
-/* ─── Shared Modal ─── */
-function Modal({ children, onClose, title }: { children: React.ReactNode; onClose: () => void; title: string }) {
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={onClose}>
-            <div className="bg-bg-secondary border border-border-default rounded-xl w-full max-w-md mx-4 shadow-2xl" onClick={(e) => e.stopPropagation()}>
-                <div className="flex items-center justify-between px-6 py-4 border-b border-border-default">
-                    <h3 className="text-lg font-bold text-text-primary">{title}</h3>
-                    <button onClick={onClose} className="p-1 rounded-lg hover:bg-bg-hover text-text-tertiary transition-colors cursor-pointer">
-                        <X className="w-5 h-5" />
-                    </button>
-                </div>
-                <div className="px-6 py-5">{children}</div>
-            </div>
-        </div>
-    );
-}

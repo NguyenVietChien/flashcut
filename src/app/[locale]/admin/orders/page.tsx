@@ -6,6 +6,16 @@ import { FilterBar } from "@/components/admin/FilterBar";
 import { Pagination } from "@/components/admin/Pagination";
 import { PAGE_SIZE } from "@/lib/constants";
 import { Suspense } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { tierBadgeClass, statusBadgeClass } from "@/components/admin/badge-styles";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
@@ -65,10 +75,12 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
         refunded: t("refunded"),
     };
 
+
+
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold text-text-primary">{t("orders")}</h1>
+                <h1 className="text-xl font-bold text-text-primary">{t("orders")}</h1>
             </div>
 
             <FilterBar
@@ -105,52 +117,45 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
                 totalLabel={`${total} ${t("total")}`}
             />
 
-            <div className="glass-card overflow-hidden">
+            <div className="rounded-xl border border-border-default bg-bg-secondary/50 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-border-default">
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("customer")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("plan")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("amount")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("paymentMethod")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">Status</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("licenseKey")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("createdAt")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("actions")}</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border-default">
+                    <Table className="min-w-[900px]">
+                        <TableHeader>
+                            <TableRow className="border-border-default hover:bg-transparent">
+                                <TableHead className="text-text-tertiary">{t("customer")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("plan")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("amount")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("paymentMethod")}</TableHead>
+                                <TableHead className="text-text-tertiary">Status</TableHead>
+                                <TableHead className="text-text-tertiary">{t("licenseKey")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("createdAt")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("actions")}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {orders.map((order) => (
-                                <tr key={order.id} className="hover:bg-bg-hover transition-colors">
-                                    <td className="px-6 py-4">
+                                <TableRow key={order.id} className="border-border-default hover:bg-bg-hover/50 transition-colors">
+                                    <TableCell>
                                         <p className="text-sm text-text-primary font-medium">{order.user?.name || "—"}</p>
                                         <p className="text-xs text-text-tertiary">{order.user?.email || order.buyerEmail || "—"}</p>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.plan === "ultra" ? "bg-gold/20 text-gold" :
-                                            order.plan === "pro" ? "bg-purple-500/20 text-purple-400" :
-                                                "bg-bg-tertiary text-text-secondary"
-                                            }`}>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={tierBadgeClass(order.plan)}>
                                             {order.plan.toUpperCase()}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-text-primary font-medium">
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-sm text-text-primary font-medium tabular-nums">
                                         {new Intl.NumberFormat("vi-VN").format(order.amount)}đ
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-text-secondary capitalize">
+                                    </TableCell>
+                                    <TableCell className="text-sm text-text-secondary capitalize">
                                         {order.paymentMethod}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.status === "paid" ? "bg-success/20 text-success" :
-                                            order.status === "pending" ? "bg-warning/20 text-warning" :
-                                                order.status === "refunded" ? "bg-blue-500/20 text-blue-400" :
-                                                    "bg-error/20 text-error"
-                                            }`}>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={statusBadgeClass(order.status)}>
                                             {order.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4">
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
                                         {order.license ? (
                                             <code className="text-xs font-mono text-accent bg-accent/10 px-2 py-1 rounded">
                                                 {order.license.key.substring(0, 16)}...
@@ -158,27 +163,27 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
                                         ) : (
                                             <span className="text-xs text-text-tertiary">—</span>
                                         )}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-text-tertiary">
+                                    </TableCell>
+                                    <TableCell className="text-sm text-text-tertiary tabular-nums">
                                         {new Date(order.createdAt).toLocaleDateString("vi-VN")}
-                                    </td>
-                                    <td className="px-6 py-4">
+                                    </TableCell>
+                                    <TableCell>
                                         <div className="flex items-center gap-2">
                                             <UpdateStatusButton order={{ id: order.id, status: order.status }} labels={labels} />
                                             <DeleteOrderButton orderId={order.id} labels={labels} />
                                         </div>
-                                    </td>
-                                </tr>
+                                    </TableCell>
+                                </TableRow>
                             ))}
                             {orders.length === 0 && (
-                                <tr>
-                                    <td colSpan={8} className="px-6 py-8 text-center text-text-tertiary text-sm">
+                                <TableRow>
+                                    <TableCell colSpan={8} className="text-center text-text-tertiary text-sm py-12">
                                         {t("noData")}
-                                    </td>
-                                </tr>
+                                    </TableCell>
+                                </TableRow>
                             )}
-                        </tbody>
-                    </table>
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
 

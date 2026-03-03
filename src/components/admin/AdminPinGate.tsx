@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Shield, Lock, AlertTriangle } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { verifyAdminPin } from "@/lib/admin-auth";
 import { useRouter } from "next/navigation";
 
@@ -55,12 +57,12 @@ export default function AdminPinGate({ labels }: { labels: Record<string, string
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div className="relative">
                             <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text-tertiary" />
-                            <input
+                            <Input
                                 type="password"
                                 value={pin}
                                 onChange={(e) => setPin(e.target.value)}
                                 placeholder={labels.placeholder}
-                                className="input-field pl-10 text-center tracking-[0.3em] font-mono"
+                                className="pl-10 text-center tracking-[0.3em] font-mono"
                                 autoFocus
                                 autoComplete="off"
                                 disabled={loading}
@@ -71,13 +73,13 @@ export default function AdminPinGate({ labels }: { labels: Record<string, string
                             <p className="text-sm text-error text-center">{error}</p>
                         )}
 
-                        <button
+                        <Button
                             type="submit"
                             disabled={!pin || loading}
-                            className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full bg-accent text-black hover:bg-accent-hover disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             {loading ? labels.verifying : labels.verify}
-                        </button>
+                        </Button>
                     </form>
 
                     {/* Info */}

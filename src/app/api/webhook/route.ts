@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { getStripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
-import { generateLicenseKey, getLicenseExpiry } from "@/lib/license";
+import { createPaymentLicense } from "@/lib/services/license.service";
 
 export async function POST(req: Request) {
     const body = await req.text();
@@ -40,15 +40,7 @@ export async function POST(req: Request) {
             },
         });
 
-        await prisma.license.create({
-            data: {
-                userId,
-                orderId,
-                key: generateLicenseKey(plan),
-                plan,
-                expiresAt: getLicenseExpiry(30),
-            },
-        });
+        await createPaymentLicense(orderId, userId, plan);
     }
 
     return NextResponse.json({ received: true });

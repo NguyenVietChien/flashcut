@@ -7,6 +7,16 @@ import { FilterBar } from "@/components/admin/FilterBar";
 import { Pagination } from "@/components/admin/Pagination";
 import { PAGE_SIZE } from "@/lib/constants";
 import { Suspense } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { tierBadgeClass } from "@/components/admin/badge-styles";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
@@ -58,10 +68,12 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
         confirm: t("confirm"),
     };
 
+
+
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold text-text-primary">{t("users")}</h1>
+                <h1 className="text-xl font-bold text-text-primary">{t("users")}</h1>
             </div>
 
             <FilterBar
@@ -84,24 +96,24 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
                 totalLabel={`${total} ${t("total")}`}
             />
 
-            <div className="glass-card overflow-hidden">
+            <div className="rounded-xl border border-border-default bg-bg-secondary/50 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-border-default">
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("name")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">Email</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">Role</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("plan")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("ordersCount")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("createdAt")}</th>
-                                <th className="text-left text-xs font-medium text-text-tertiary uppercase tracking-wider px-6 py-4">{t("actions")}</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border-default">
+                    <Table className="min-w-[700px]">
+                        <TableHeader>
+                            <TableRow className="border-border-default hover:bg-transparent">
+                                <TableHead className="text-text-tertiary">{t("name")}</TableHead>
+                                <TableHead className="text-text-tertiary">Email</TableHead>
+                                <TableHead className="text-text-tertiary">Role</TableHead>
+                                <TableHead className="text-text-tertiary">{t("plan")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("ordersCount")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("createdAt")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("actions")}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {users.map((user) => (
-                                <tr key={user.id} className="hover:bg-bg-hover transition-colors">
-                                    <td className="px-6 py-4">
+                                <TableRow key={user.id} className="border-border-default hover:bg-bg-hover/50 transition-colors">
+                                    <TableCell>
                                         <div className="flex items-center gap-3">
                                             {user.image ? (
                                                 <img src={user.image} alt="" className="w-8 h-8 rounded-full" />
@@ -112,21 +124,27 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
                                             )}
                                             <span className="text-sm text-text-primary font-medium">{user.name || "—"}</span>
                                         </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-text-secondary">{user.email}</td>
-                                    <td className="px-6 py-4">
-                                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${user.role === "admin" ? "bg-accent/20 text-accent" : "bg-bg-tertiary text-text-secondary"}`}>
+                                    </TableCell>
+                                    <TableCell className="text-sm text-text-secondary">{user.email}</TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={
+                                            user.role === "admin"
+                                                ? "bg-accent/15 text-accent border-accent/30"
+                                                : "bg-bg-tertiary text-text-secondary border-border-default"
+                                        }>
                                             {user.role}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-text-secondary">
-                                        {user.licenses[0]?.plan?.toUpperCase() || "Free"}
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-text-secondary">{user._count.orders}</td>
-                                    <td className="px-6 py-4 text-sm text-text-tertiary">
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Badge variant="outline" className={tierBadgeClass(user.licenses[0]?.plan)}>
+                                            {user.licenses[0]?.plan?.toUpperCase() || "FREE"}
+                                        </Badge>
+                                    </TableCell>
+                                    <TableCell className="text-sm text-text-secondary tabular-nums">{user._count.orders}</TableCell>
+                                    <TableCell className="text-sm text-text-tertiary tabular-nums">
                                         {new Date(user.createdAt).toLocaleDateString("vi-VN")}
-                                    </td>
-                                    <td className="px-6 py-4">
+                                    </TableCell>
+                                    <TableCell>
                                         <div className="flex items-center gap-2">
                                             <EditRoleButton
                                                 user={{ id: user.id, role: user.role, name: user.name, email: user.email }}
@@ -138,11 +156,18 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
                                                 labels={labels}
                                             />
                                         </div>
-                                    </td>
-                                </tr>
+                                    </TableCell>
+                                </TableRow>
                             ))}
-                        </tbody>
-                    </table>
+                            {users.length === 0 && (
+                                <TableRow>
+                                    <TableCell colSpan={7} className="text-center text-text-tertiary text-sm py-12">
+                                        {t("noData")}
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
 

@@ -6,6 +6,16 @@ import { FilterBar } from "@/components/admin/FilterBar";
 import { Pagination } from "@/components/admin/Pagination";
 import { PAGE_SIZE } from "@/lib/constants";
 import { Suspense } from "react";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { tierBadgeClass, sourceBadgeClass } from "@/components/admin/badge-styles";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
@@ -38,7 +48,6 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
     }
     if (params.q) {
         const q = params.q;
-        // Reset OR if status=active already set it
         const searchOr = [
             { key: { contains: q, mode: "insensitive" as const } },
             { email: { contains: q, mode: "insensitive" as const } },
@@ -46,7 +55,6 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
             { user: { email: { contains: q, mode: "insensitive" as const } } },
         ];
         if (where.OR) {
-            // Combine with existing OR (from status=active)
             where.AND = [{ OR: where.OR }, { OR: searchOr }];
             delete where.OR;
         } else {
@@ -97,17 +105,12 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
         resetHwid: t("resetHwid"),
     };
 
-    const sourceColors: Record<string, string> = {
-        web: "bg-blue-500/20 text-blue-400",
-        telegram: "bg-sky-500/20 text-sky-400",
-        zalo: "bg-indigo-500/20 text-indigo-400",
-        admin: "bg-amber-500/20 text-amber-400",
-    };
+
 
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
-                <h1 className="text-2xl font-bold text-text-primary">Licenses</h1>
+                <h1 className="text-xl font-bold text-text-primary">Licenses</h1>
                 <CreateLicenseButton labels={labels} />
             </div>
 
@@ -143,71 +146,69 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
                 totalLabel={`${total} ${t("total")}`}
             />
 
-            <div className="glass-card overflow-hidden">
+            <div className="rounded-xl border border-border-default bg-bg-secondary/50 overflow-hidden">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="border-b border-border-default">
-                                <th className="th-cell">{t("licenseKey")}</th>
-                                <th className="th-cell">Product</th>
-                                <th className="th-cell">Tier</th>
-                                <th className="th-cell">Owner</th>
-                                <th className="th-cell">Source</th>
-                                <th className="th-cell">{t("activations")}</th>
-                                <th className="th-cell">{t("usage")}</th>
-                                <th className="th-cell">Status</th>
-                                <th className="th-cell">{t("expiresAt")}</th>
-                                <th className="th-cell">{t("actions")}</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-border-default">
+                    <Table className="min-w-[1000px]">
+                        <TableHeader>
+                            <TableRow className="border-border-default hover:bg-transparent">
+                                <TableHead className="text-text-tertiary">{t("licenseKey")}</TableHead>
+                                <TableHead className="text-text-tertiary">Product</TableHead>
+                                <TableHead className="text-text-tertiary">Tier</TableHead>
+                                <TableHead className="text-text-tertiary">Owner</TableHead>
+                                <TableHead className="text-text-tertiary">Source</TableHead>
+                                <TableHead className="text-text-tertiary">{t("activations")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("usage")}</TableHead>
+                                <TableHead className="text-text-tertiary">Status</TableHead>
+                                <TableHead className="text-text-tertiary">{t("expiresAt")}</TableHead>
+                                <TableHead className="text-text-tertiary">{t("actions")}</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
                             {licenses.map((lic) => {
                                 const isExpired = lic.expiresAt ? new Date(lic.expiresAt) < new Date() : false;
                                 const ownerDisplay = lic.user?.name || lic.user?.email || lic.email || lic.contactInfo || "—";
                                 return (
-                                    <tr key={lic.id} className="hover:bg-bg-hover transition-colors">
-                                        <td className="px-6 py-4">
+                                    <TableRow key={lic.id} className="border-border-default hover:bg-bg-hover/50 transition-colors">
+                                        <TableCell>
                                             <code className="text-xs font-mono text-accent bg-accent/10 px-2 py-1 rounded">
                                                 {lic.key}
                                             </code>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-text-secondary">
+                                        </TableCell>
+                                        <TableCell className="text-sm text-text-secondary">
                                             {lic.product?.name || "—"}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${lic.tier === "ultra" ? "bg-gold/20 text-gold" :
-                                                lic.tier === "pro" ? "bg-purple-500/20 text-purple-400" :
-                                                    "bg-bg-tertiary text-text-secondary"
-                                                }`}>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline" className={tierBadgeClass(lic.tier)}>
                                                 {lic.tier.toUpperCase()}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-text-secondary" title={lic.note || ""}>
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-sm text-text-secondary" title={lic.note || ""}>
                                             {ownerDisplay}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${sourceColors[lic.source] || "bg-bg-tertiary text-text-secondary"}`}>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline" className={sourceBadgeClass(lic.source)}>
                                                 {lic.source}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-text-secondary">
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-sm text-text-secondary tabular-nums">
                                             {lic.currentActivations}/{lic.maxActivations}
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-text-secondary">
+                                        </TableCell>
+                                        <TableCell className="text-sm text-text-secondary tabular-nums">
                                             {lic.usageLimit == null ? `${lic.currentUsage}/∞` : `${lic.currentUsage}/${lic.usageLimit}`}
-                                        </td>
-                                        <td className="px-6 py-4">
-                                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${lic.status !== "active" || isExpired
-                                                ? "bg-error/20 text-error"
-                                                : "bg-success/20 text-success"
-                                                }`}>
+                                        </TableCell>
+                                        <TableCell>
+                                            <Badge variant="outline" className={
+                                                lic.status !== "active" || isExpired
+                                                    ? "bg-error/15 text-error border-error/30"
+                                                    : "bg-success/15 text-success border-success/30"
+                                            }>
                                                 {lic.status !== "active" ? t("inactive") : isExpired ? t("expired") : t("active")}
-                                            </span>
-                                        </td>
-                                        <td className="px-6 py-4 text-sm text-text-tertiary">
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-sm text-text-tertiary tabular-nums">
                                             {lic.expiresAt ? new Date(lic.expiresAt).toLocaleDateString("vi-VN") : "∞"}
-                                        </td>
-                                        <td className="px-6 py-4">
+                                        </TableCell>
+                                        <TableCell>
                                             <div className="flex items-center gap-1">
                                                 <EditLicenseButton
                                                     license={{
@@ -222,19 +223,19 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
                                                 <ResetHwidButton licenseId={lic.id} labels={labels} />
                                                 <DeleteLicenseButton licenseId={lic.id} labels={labels} />
                                             </div>
-                                        </td>
-                                    </tr>
+                                        </TableCell>
+                                    </TableRow>
                                 );
                             })}
                             {licenses.length === 0 && (
-                                <tr>
-                                    <td colSpan={10} className="px-6 py-8 text-center text-text-tertiary text-sm">
+                                <TableRow>
+                                    <TableCell colSpan={10} className="text-center text-text-tertiary text-sm py-12">
                                         {t("noData")}
-                                    </td>
-                                </tr>
+                                    </TableCell>
+                                </TableRow>
                             )}
-                        </tbody>
-                    </table>
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
 

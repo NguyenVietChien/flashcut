@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { generateLicenseKey, getLicenseExpiry } from "@/lib/license";
+import { createPaymentLicense } from "@/lib/services/license.service";
 import { parseSepayOrderCode } from "@/lib/sepay";
 
 interface SepayWebhookPayload {
@@ -59,15 +59,7 @@ export async function POST(req: Request) {
             data: { status: "paid", paidAt: new Date() },
         });
 
-        await prisma.license.create({
-            data: {
-                userId: order.userId,
-                orderId: order.id,
-                key: generateLicenseKey(order.plan),
-                plan: order.plan,
-                expiresAt: getLicenseExpiry(30),
-            },
-        });
+        await createPaymentLicense(order.id, order.userId, order.plan);
 
         return NextResponse.json({ success: true, message: "License activated" });
     } catch (error) {

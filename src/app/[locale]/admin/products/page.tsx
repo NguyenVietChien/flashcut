@@ -57,7 +57,7 @@ export default async function AdminProductsPage() {
         <div>
             <div className="flex items-center justify-between mb-8">
                 <div>
-                    <h1 className="text-2xl font-bold text-text-primary">{t("products")}</h1>
+                    <h1 className="text-xl font-bold text-text-primary">{t("products")}</h1>
                     <p className="text-sm text-text-tertiary mt-1">{t("productsSubtitle")}</p>
                 </div>
                 <CreateProductButton labels={labels} />

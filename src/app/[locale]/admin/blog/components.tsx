@@ -2,19 +2,29 @@
 
 import { useState, useEffect, useCallback, useRef } from "react";
 import dynamic from "next/dynamic";
+import { type MDXEditorMethods } from "@mdxeditor/editor";
 import {
     ArrowLeft,
     Save,
     Upload,
-    Image as ImageIcon,
     Loader2,
-    Eye,
-    Edit3,
     Globe,
 } from "lucide-react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
-const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false });
+const ForwardRefEditor = dynamic(
+    () => import("@/components/admin/InitializedMDXEditor"),
+    { ssr: false }
+);
 
 interface PostData {
     slug: string;
@@ -61,8 +71,7 @@ export function BlogEditor({
     const [saving, setSaving] = useState(false);
     const [saved, setSaved] = useState(false);
     const [uploading, setUploading] = useState(false);
-    const [previewMode, setPreviewMode] = useState(false);
-    const fileInputRef = useRef<HTMLInputElement>(null);
+    const editorRef = useRef<MDXEditorMethods>(null);
 
     const [form, setForm] = useState<PostData>({
         slug: initialData?.slug || "",
@@ -95,8 +104,34 @@ export function BlogEditor({
         setSaved(false);
     };
 
-    // Upload image
-    const uploadImage = useCallback(
+    // Upload image handler for MDXEditor
+    const imageUploadHandler = useCallback(
+        async (image: File): Promise<string> => {
+            setUploading(true);
+            try {
+                const fd = new FormData();
+                fd.append("file", image);
+                const res = await fetch("/api/admin/blog/upload", {
+                    method: "POST",
+                    body: fd,
+                });
+                const data = await res.json();
+                if (data.url) {
+                    return data.url as string;
+                }
+                throw new Error(data.error || "Upload failed");
+            } catch (e) {
+                alert(e instanceof Error ? e.message : "Upload failed");
+                return "";
+            } finally {
+                setUploading(false);
+            }
+        },
+        []
+    );
+
+    // Set as cover image
+    const setCoverImage = useCallback(
         async (file: File) => {
             setUploading(true);
             try {
@@ -108,58 +143,15 @@ export function BlogEditor({
                 });
                 const data = await res.json();
                 if (data.url) {
-                    return data.url as string;
+                    setForm((prev) => ({ ...prev, coverImage: data.url }));
                 }
-                alert(data.error || "Upload failed");
-                return null;
             } catch {
                 alert("Upload failed");
-                return null;
             } finally {
                 setUploading(false);
             }
         },
         []
-    );
-
-    // Insert image into editor
-    const insertImage = useCallback(
-        async (file: File) => {
-            const url = await uploadImage(file);
-            if (url) {
-                const imgMarkdown = `\n![${file.name.replace(/\.[^/.]+$/, "")}](${url})\n`;
-                setForm((prev) => ({
-                    ...prev,
-                    content: prev.content + imgMarkdown,
-                }));
-            }
-        },
-        [uploadImage]
-    );
-
-    // Set as cover image
-    const setCoverImage = useCallback(
-        async (file: File) => {
-            const url = await uploadImage(file);
-            if (url) {
-                setForm((prev) => ({ ...prev, coverImage: url }));
-            }
-        },
-        [uploadImage]
-    );
-
-    // Handle drag & drop on editor
-    const handleDrop = useCallback(
-        (e: React.DragEvent) => {
-            e.preventDefault();
-            const files = Array.from(e.dataTransfer.files).filter((f) =>
-                f.type.startsWith("image/")
-            );
-            if (files.length > 0) {
-                insertImage(files[0]);
-            }
-        },
-        [insertImage]
     );
 
     // Save post
@@ -169,13 +161,16 @@ export function BlogEditor({
             return;
         }
 
+        // Get latest markdown from editor
+        const content = editorRef.current?.getMarkdown() || form.content;
+
         setSaving(true);
         try {
             const method = isEditing ? "PUT" : "POST";
             const res = await fetch("/api/admin/blog", {
                 method,
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(form),
+                body: JSON.stringify({ ...form, content }),
             });
             const data = await res.json();
             if (data.success) {
@@ -204,26 +199,15 @@ export function BlogEditor({
                     >
                         <ArrowLeft className="w-5 h-5" />
                     </Link>
-                    <h1 className="text-2xl font-bold text-text-primary">
+                    <h1 className="text-xl font-bold text-text-primary">
                         {isEditing ? labels.editPost : labels.newPost}
                     </h1>
                 </div>
                 <div className="flex items-center gap-3">
-                    <button
-                        onClick={() => setPreviewMode(!previewMode)}
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border border-border-default text-text-secondary hover:bg-bg-hover transition-colors text-sm cursor-pointer"
-                    >
-                        {previewMode ? (
-                            <Edit3 className="w-4 h-4" />
-                        ) : (
-                            <Eye className="w-4 h-4" />
-                        )}
-                        {previewMode ? labels.edit : labels.preview}
-                    </button>
-                    <button
+                    <Button
                         onClick={handleSave}
                         disabled={saving}
-                        className="flex items-center gap-2 px-5 py-2 rounded-lg bg-accent text-white hover:bg-accent/90 transition-colors text-sm font-medium disabled:opacity-50 cursor-pointer"
+                        className="bg-accent text-black hover:bg-accent/90 gap-2"
                     >
                         {saving ? (
                             <Loader2 className="w-4 h-4 animate-spin" />
@@ -231,7 +215,7 @@ export function BlogEditor({
                             <Save className="w-4 h-4" />
                         )}
                         {saving ? labels.saving : saved ? labels.saved : labels.save}
-                    </button>
+                    </Button>
                 </div>
             </div>
 
@@ -239,12 +223,12 @@ export function BlogEditor({
                 {/* Main Editor */}
                 <div className="lg:col-span-3 space-y-4">
                     {/* Title */}
-                    <input
+                    <Input
                         type="text"
                         value={form.title}
                         onChange={(e) => updateField("title", e.target.value)}
                         placeholder={labels.titlePlaceholder}
-                        className="w-full px-4 py-3 bg-bg-secondary border border-border-default rounded-xl text-text-primary text-xl font-bold placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent/50"
+                        className="h-auto px-4 py-3 bg-bg-secondary border-border-default text-text-primary text-xl font-bold rounded-xl"
                     />
 
                     {/* Excerpt */}
@@ -256,13 +240,8 @@ export function BlogEditor({
                         className="w-full px-4 py-3 bg-bg-secondary border border-border-default rounded-xl text-text-secondary placeholder:text-text-tertiary focus:outline-none focus:ring-2 focus:ring-accent/50 resize-none text-sm"
                     />
 
-                    {/* Markdown Editor */}
-                    <div
-                        onDrop={handleDrop}
-                        onDragOver={(e) => e.preventDefault()}
-                        data-color-mode="dark"
-                        className="relative"
-                    >
+                    {/* MDXEditor */}
+                    <div className="relative mdx-editor-wrapper">
                         {uploading && (
                             <div className="absolute inset-0 z-10 bg-bg-primary/80 backdrop-blur-sm rounded-xl flex items-center justify-center">
                                 <div className="flex items-center gap-3 text-accent">
@@ -273,38 +252,13 @@ export function BlogEditor({
                                 </div>
                             </div>
                         )}
-                        <MDEditor
-                            value={form.content}
-                            onChange={(v) => updateField("content", v || "")}
-                            preview={previewMode ? "preview" : "edit"}
-                            height={500}
-                            className="!bg-bg-secondary !border-border-default rounded-xl overflow-hidden"
+                        <ForwardRefEditor
+                            editorRef={editorRef}
+                            markdown={form.content}
+                            onChange={(v) => updateField("content", v)}
+                            imageUploadHandler={imageUploadHandler}
+                            contentEditableClassName="mdx-editor-content"
                         />
-                    </div>
-
-                    {/* Image insert button */}
-                    <div className="flex items-center gap-3">
-                        <input
-                            ref={fileInputRef}
-                            type="file"
-                            accept="image/png,image/jpeg,image/webp,image/gif"
-                            className="hidden"
-                            onChange={(e) => {
-                                const file = e.target.files?.[0];
-                                if (file) insertImage(file);
-                                e.target.value = "";
-                            }}
-                        />
-                        <button
-                            onClick={() => fileInputRef.current?.click()}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg border border-dashed border-border-default text-text-tertiary hover:text-accent hover:border-accent transition-colors text-sm cursor-pointer"
-                        >
-                            <ImageIcon className="w-4 h-4" />
-                            {labels.insertImage}
-                        </button>
-                        <span className="text-xs text-text-tertiary">
-                            {labels.dragDropHint}
-                        </span>
                     </div>
                 </div>
 
@@ -316,15 +270,15 @@ export function BlogEditor({
                             <Globe className="w-3.5 h-3.5" />
                             {labels.language}
                         </label>
-                        <select
-                            value={form.locale}
-                            onChange={(e) => updateField("locale", e.target.value)}
-                            disabled={isEditing}
-                            className="input-field text-sm"
-                        >
-                            <option value="en">English</option>
-                            <option value="vi">Tiếng Việt</option>
-                        </select>
+                        <Select value={form.locale} onValueChange={(val) => updateField("locale", val)} disabled={isEditing}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="en">English</SelectItem>
+                                <SelectItem value="vi">Tiếng Việt</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {/* Slug */}
@@ -332,12 +286,12 @@ export function BlogEditor({
                         <label className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">
                             Slug
                         </label>
-                        <input
+                        <Input
                             type="text"
                             value={form.slug}
                             onChange={(e) => updateField("slug", e.target.value)}
                             disabled={isEditing}
-                            className="input-field text-sm font-mono"
+                            className="text-sm font-mono"
                         />
                     </div>
 
@@ -346,11 +300,11 @@ export function BlogEditor({
                         <label className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">
                             {labels.date}
                         </label>
-                        <input
+                        <Input
                             type="date"
                             value={form.date}
                             onChange={(e) => updateField("date", e.target.value)}
-                            className="input-field text-sm"
+                            className="text-sm"
                         />
                     </div>
 
@@ -359,17 +313,16 @@ export function BlogEditor({
                         <label className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">
                             {labels.category}
                         </label>
-                        <select
-                            value={form.category}
-                            onChange={(e) => updateField("category", e.target.value)}
-                            className="input-field text-sm"
-                        >
-                            {CATEGORIES.map((c) => (
-                                <option key={c.value} value={c.value}>
-                                    {c.label}
-                                </option>
-                            ))}
-                        </select>
+                        <Select value={form.category} onValueChange={(val) => updateField("category", val)}>
+                            <SelectTrigger className="w-full">
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {CATEGORIES.map((c) => (
+                                    <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
                     </div>
 
                     {/* Read Time */}
@@ -377,7 +330,7 @@ export function BlogEditor({
                         <label className="text-xs font-semibold text-text-tertiary uppercase tracking-wide">
                             {labels.readTime}
                         </label>
-                        <input
+                        <Input
                             type="number"
                             min={1}
                             max={60}
@@ -385,7 +338,7 @@ export function BlogEditor({
                             onChange={(e) =>
                                 updateField("readTime", parseInt(e.target.value) || 5)
                             }
-                            className="input-field text-sm"
+                            className="text-sm"
                         />
                     </div>
 
@@ -438,8 +391,8 @@ export function BlogEditor({
                                     key={g}
                                     onClick={() => updateField("coverGradient", g)}
                                     className={`h-8 rounded-md bg-gradient-to-r ${g} border-2 transition-all cursor-pointer ${form.coverGradient === g
-                                            ? "border-accent scale-110"
-                                            : "border-transparent hover:border-border-default"
+                                        ? "border-accent scale-110"
+                                        : "border-transparent hover:border-border-default"
                                         }`}
                                 />
                             ))}

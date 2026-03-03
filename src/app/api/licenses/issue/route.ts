@@ -1,24 +1,10 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import crypto from "crypto";
-
-function generateLicenseKey(): string {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    const segments = [];
-    for (let i = 0; i < 4; i++) {
-        let seg = "";
-        for (let j = 0; j < 5; j++) {
-            seg += chars[crypto.randomInt(chars.length)];
-        }
-        segments.push(seg);
-    }
-    return segments.join("-");
-}
+import { issueBotLicense } from "@/lib/services/license.service";
 
 /**
  * POST /api/licenses/issue
  * Bot API endpoint for issuing licenses from Telegram/Zalo bots
- * 
+ *
  * Headers: { "x-api-secret": "your-bot-secret" }
  * Body: {
  *   "productSlug": "flashcut",
@@ -49,65 +35,16 @@ export async function POST(request: Request) {
             );
         }
 
-        // Find product
-        const product = await prisma.product.findUnique({
-            where: { slug: productSlug },
+        const result = await issueBotLicense({
+            productSlug, planSlug, source, contactInfo, buyerEmail, note,
         });
 
-        if (!product) {
-            return NextResponse.json(
-                { error: `Product '${productSlug}' not found` },
-                { status: 404 }
-            );
-        }
-
-        // Find plan
-        const plan = await prisma.plan.findUnique({
-            where: { productId_slug: { productId: product.id, slug: planSlug } },
-        });
-
-        if (!plan) {
-            return NextResponse.json(
-                { error: `Plan '${planSlug}' not found for product '${productSlug}'` },
-                { status: 404 }
-            );
-        }
-
-        // Calculate expiry
-        const expiresAt = plan.durationDays
-            ? new Date(Date.now() + plan.durationDays * 24 * 60 * 60 * 1000)
-            : null;
-
-        // Create license
-        const licenseKey = generateLicenseKey();
-        const license = await prisma.license.create({
-            data: {
-                key: licenseKey,
-                productId: product.id,
-                plan: planSlug,
-                tier: planSlug,
-                source: source || "web",
-                contactInfo: contactInfo || null,
-                email: buyerEmail || null,
-                note: note || null,
-                maxActivations: plan.maxActivations,
-                usageLimit: plan.usageLimit,
-                expiresAt,
-            },
-        });
-
-        return NextResponse.json({
-            success: true,
-            licenseKey: license.key,
-            product: product.name,
-            plan: plan.name,
-            expiresAt: license.expiresAt?.toISOString() || null,
-        });
+        return NextResponse.json({ success: true, ...result });
     } catch (error) {
-        console.error("License issue error:", error);
-        return NextResponse.json(
-            { error: "Failed to issue license" },
-            { status: 500 }
-        );
+        const message = error instanceof Error ? error.message : "Failed to issue license";
+        const status = message.includes("not found") ? 404 : 500;
+        if (status === 500) console.error("License issue error:", error);
+        return NextResponse.json({ error: message }, { status });
     }
 }
+
