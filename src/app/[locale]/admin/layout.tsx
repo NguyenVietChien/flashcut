@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
 import { getTranslations } from "next-intl/server";
 import { isAdminVerified } from "@/lib/admin-auth";
 import AdminPinGate from "@/components/admin/AdminPinGate";
@@ -22,16 +21,12 @@ async function AdminGuard({ locale }: { locale: string }) {
         redirect(`/${locale}/auth/signin`);
     }
 
-    const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { role: true, name: true, email: true },
-    });
-
-    if (!user || user.role !== "admin") {
+    // Role is now in JWT — no DB query needed
+    if (session.user.role !== "admin") {
         redirect(`/${locale}/dashboard`);
     }
 
-    return user;
+    return { email: session.user.email, name: session.user.name };
 }
 
 const navItems = [

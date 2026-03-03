@@ -43,20 +43,41 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                     name: user.name,
                     email: user.email,
                     image: user.image,
+                    role: user.role,
                 };
             },
         }),
     ],
     callbacks: {
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger }) {
+            // On first sign-in, attach role from user object
             if (user) {
                 token.id = user.id;
+                token.role = user.role || "user";
+            }
+            // For OAuth users (Google), role may not be in the user object on first sign-in
+            // Fetch from DB if missing
+            if (token.id && !token.role) {
+                const dbUser = await prisma.user.findUnique({
+                    where: { id: token.id as string },
+                    select: { role: true },
+                });
+                token.role = dbUser?.role || "user";
+            }
+            // Allow manual refresh of role (e.g., after admin promotes user)
+            if (trigger === "update" && token.id) {
+                const dbUser = await prisma.user.findUnique({
+                    where: { id: token.id as string },
+                    select: { role: true },
+                });
+                token.role = dbUser?.role || "user";
             }
             return token;
         },
         async session({ session, token }) {
             if (session.user && token.id) {
                 session.user.id = token.id as string;
+                session.user.role = (token.role as string) || "user";
             }
             return session;
         },
