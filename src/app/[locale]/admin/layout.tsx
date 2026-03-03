@@ -11,6 +11,7 @@ import {
     FileText,
     Shield,
     LogOut,
+    Package,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -31,6 +32,7 @@ async function AdminGuard({ locale }: { locale: string }) {
 
 const navItems = [
     { href: "", icon: LayoutDashboard, label: "dashboard" },
+    { href: "/products", icon: Package, label: "products" },
     { href: "/users", icon: Users, label: "users" },
     { href: "/desktop-licenses", icon: Key, label: "licenses" },
     { href: "/orders", icon: ShoppingCart, label: "orders" },
