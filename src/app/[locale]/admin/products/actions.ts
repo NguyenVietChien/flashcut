@@ -87,9 +87,26 @@ export async function createPlan(formData: FormData) {
     const durationDays = formData.get("durationDays") ? parseInt(formData.get("durationDays") as string) : null;
     const maxActivations = parseInt(formData.get("maxActivations") as string) || 1;
     const usageLimit = formData.get("usageLimit") ? parseInt(formData.get("usageLimit") as string) : null;
+    const featuresRaw = formData.get("features") as string;
+
+    // Display fields
+    const taglineVi = formData.get("taglineVi") as string || null;
+    const taglineEn = formData.get("taglineEn") as string || null;
+    const highlightVi = formData.get("highlightVi") as string || null;
+    const highlightEn = formData.get("highlightEn") as string || null;
+    const ctaVi = formData.get("ctaVi") as string || null;
+    const ctaEn = formData.get("ctaEn") as string || null;
+    const emoji = formData.get("emoji") as string || null;
+    const sortOrder = parseInt(formData.get("sortOrder") as string) || 0;
+    const isFeatured = formData.get("isFeatured") === "true";
 
     if (!productId || !name || !slug || isNaN(priceVnd)) {
         return { error: "Missing required fields" };
+    }
+
+    let features = undefined;
+    if (featuresRaw) {
+        try { features = JSON.parse(featuresRaw); } catch { return { error: "Invalid features JSON" }; }
     }
 
     const existing = await prisma.plan.findUnique({
@@ -98,7 +115,13 @@ export async function createPlan(formData: FormData) {
     if (existing) return { error: "Plan slug already exists for this product" };
 
     await prisma.plan.create({
-        data: { productId, name, slug, priceVnd, priceUsd, durationDays, maxActivations, usageLimit },
+        data: {
+            productId, name, slug, priceVnd, priceUsd, durationDays, maxActivations, usageLimit,
+            features,
+            display: {
+                create: { taglineVi, taglineEn, highlightVi, highlightEn, ctaVi, ctaEn, emoji, sortOrder, isFeatured },
+            },
+        },
     });
 
     revalidatePath("/admin/products");
@@ -117,14 +140,39 @@ export async function updatePlan(formData: FormData) {
     const maxActivations = parseInt(formData.get("maxActivations") as string) || 1;
     const usageLimit = formData.get("usageLimit") ? parseInt(formData.get("usageLimit") as string) : null;
     const isActive = formData.get("isActive") === "true";
+    const featuresRaw = formData.get("features") as string;
+
+    // Display fields
+    const taglineVi = formData.get("taglineVi") as string || null;
+    const taglineEn = formData.get("taglineEn") as string || null;
+    const highlightVi = formData.get("highlightVi") as string || null;
+    const highlightEn = formData.get("highlightEn") as string || null;
+    const ctaVi = formData.get("ctaVi") as string || null;
+    const ctaEn = formData.get("ctaEn") as string || null;
+    const emoji = formData.get("emoji") as string || null;
+    const sortOrder = parseInt(formData.get("sortOrder") as string) || 0;
+    const isFeatured = formData.get("isFeatured") === "true";
 
     if (!id || !name || !slug || isNaN(priceVnd)) {
         return { error: "Missing required fields" };
     }
 
+    let features = undefined;
+    if (featuresRaw) {
+        try { features = JSON.parse(featuresRaw); } catch { return { error: "Invalid features JSON" }; }
+    }
+
+    const displayData = { taglineVi, taglineEn, highlightVi, highlightEn, ctaVi, ctaEn, emoji, sortOrder, isFeatured };
+
     await prisma.plan.update({
         where: { id },
-        data: { name, slug, priceVnd, priceUsd, durationDays, maxActivations, usageLimit, isActive },
+        data: {
+            name, slug, priceVnd, priceUsd, durationDays, maxActivations, usageLimit, isActive,
+            features,
+            display: {
+                upsert: { create: displayData, update: displayData },
+            },
+        },
     });
 
     revalidatePath("/admin/products");

@@ -87,20 +87,36 @@ model Product {
 }
 
 model Plan {
-    id             String  @id @default(cuid())
+    id             String       @id @default(cuid())
     productId      String
     slug           String
     name           String
     priceVnd       Int
     priceUsd       Int?
     durationDays   Int? // null = lifetime
-    maxActivations Int     @default(1)
+    maxActivations Int          @default(1)
     usageLimit     Int? // null = unlimited
     features       Json?
-    isActive       Boolean @default(true)
-    product        Product @relation(fields: [productId], references: [id])
+    isActive       Boolean      @default(true)
+    product        Product      @relation(fields: [productId], references: [id])
+    display        PlanDisplay?
 
     @@unique([productId, slug])
+}
+
+model PlanDisplay {
+    id          String  @id @default(cuid())
+    planId      String  @unique
+    plan        Plan    @relation(fields: [planId], references: [id], onDelete: Cascade)
+    taglineVi   String?
+    taglineEn   String?
+    highlightVi String?
+    highlightEn String?
+    ctaVi       String?
+    ctaEn       String?
+    emoji       String?
+    sortOrder   Int     @default(0)
+    isFeatured  Boolean @default(false)
 }
 
 // ─── Orders ────────────────────────────────────────────────────

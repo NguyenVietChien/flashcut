@@ -36,89 +36,83 @@ const cardVariant = {
     },
 };
 
-const tierIcons = [Zap, Rocket, Crown];
-const tierIconColors = ["text-accent", "text-accent", "text-gold"];
-const tierIconBg = ["bg-accent/10", "bg-accent/10", "bg-gold/10"];
+/* Maps icon name from DB → Lucide component */
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    film: Film, "Film": Film,
+    sparkles: Sparkles, "Sparkles": Sparkles,
+    brain: Brain, "Brain": Brain,
+    layers: Layers, "Layers": Layers,
+    settings: Settings, "Settings": Settings,
+    mic: Mic, "Mic": Mic,
+    "bar-chart": BarChart3, "BarChart3": BarChart3,
+    cpu: Cpu, "Cpu": Cpu,
+    plug: Plug, "Plug": Plug,
+};
 
-/* Maps group name → icon */
+/* Maps group name → icon (fallback for legacy data without icon field) */
 const groupIconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-    // Basic EN / VI
-    "Create": Film,
-    "Tạo video": Film,
-    "Polish": Sparkles,
-    "Hoàn thiện": Sparkles,
-    "AI Assist": Brain,
-    "AI hỗ trợ": Brain,
-    "Deliver": Layers,
-    "Xuất bản": Layers,
-    // Pro EN / VI
-    "Power Tools": Settings,
-    "Sức mạnh": Settings,
-    "AI Brain": Brain,
-    "AI thông minh": Brain,
-    "Voice & Subtitle": Mic,
-    "Giọng nói & Phụ đề": Mic,
-    "Workflow": BarChart3,
-    "Quy trình": BarChart3,
-    // Ultra EN / VI
+    "Create": Film, "Tạo video": Film,
+    "Polish": Sparkles, "Hoàn thiện": Sparkles,
+    "AI Assist": Brain, "AI hỗ trợ": Brain,
+    "Deliver": Layers, "Xuất bản": Layers,
+    "Power Tools": Settings, "Sức mạnh": Settings,
+    "AI Brain": Brain, "AI thông minh": Brain,
+    "Voice & Subtitle": Mic, "Giọng nói & Phụ đề": Mic,
+    "Workflow": BarChart3, "Quy trình": BarChart3,
     "AI Director": Cpu,
     "Creative Studio": Mic,
-    "Scale": Layers,
-    "Mở rộng": Layers,
-    "Connect": Plug,
-    "Kết nối": Plug,
+    "Scale": Layers, "Mở rộng": Layers,
+    "Connect": Plug, "Kết nối": Plug,
 };
+
+// ─── Types from DB ───────────────────────────────────────────
 
 interface FeatureGroup {
     group: string;
+    icon?: string;
     items: string[];
 }
 
-interface Plan {
+export interface PricingPlan {
+    slug: string;
     name: string;
-    emoji: string;
-    price: string;
-    tagline: string;
-    highlight: string;
-    cta: string;
-    featureGroups: FeatureGroup[];
+    priceVnd: number;
+    features: { vi: FeatureGroup[]; en: FeatureGroup[] } | null;
+    display: {
+        taglineVi: string | null;
+        taglineEn: string | null;
+        highlightVi: string | null;
+        highlightEn: string | null;
+        ctaVi: string | null;
+        ctaEn: string | null;
+        emoji: string | null;
+        sortOrder: number;
+        isFeatured: boolean;
+    } | null;
 }
 
-export default function Pricing() {
+interface PricingProps {
+    plans: PricingPlan[];
+    locale: string;
+}
+
+// Tier styling per index position
+const tierStyles = [
+    { border: "border-border-default", btn: "btn-outline", accent: "", headerGradient: "from-accent/5 to-transparent", iconColor: "text-accent", iconBg: "bg-accent/10", TierIcon: Zap },
+    { border: "border-accent", btn: "btn-accent", accent: "gradient-border", headerGradient: "from-accent/10 via-info/5 to-transparent", iconColor: "text-accent", iconBg: "bg-accent/10", TierIcon: Rocket },
+    { border: "border-gold/50", btn: "btn-outline !border-gold !text-gold hover:!bg-gold/10", accent: "", headerGradient: "from-gold/10 to-transparent", iconColor: "text-gold", iconBg: "bg-gold/10", TierIcon: Crown },
+];
+
+export default function Pricing({ plans, locale }: PricingProps) {
     const t = useTranslations("pricing");
-    const plans = t.raw("plans") as Plan[];
-
-    const tierStyles = [
-        {
-            border: "border-border-default",
-            btn: "btn-outline",
-            accent: "",
-            headerGradient: "from-accent/5 to-transparent",
-        },
-        {
-            border: "border-accent",
-            btn: "btn-accent",
-            accent: "gradient-border",
-            headerGradient: "from-accent/10 via-info/5 to-transparent",
-        },
-        {
-            border: "border-gold/50",
-            btn: "btn-outline !border-gold !text-gold hover:!bg-gold/10",
-            accent: "",
-            headerGradient: "from-gold/10 to-transparent",
-        },
-    ];
-
-    const planIds = ["basic", "pro", "ultra"];
     const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
-    const handleCheckout = (planId: string) => {
-        setLoadingPlan(planId);
-        window.location.href = `/vi/checkout/bank-transfer?plan=${planId}`;
+    const handleCheckout = (planSlug: string) => {
+        setLoadingPlan(planSlug);
+        window.location.href = `/${locale}/checkout/bank-transfer?plan=${planSlug}`;
     };
 
-    const getFeatureCount = (plan: Plan) =>
-        plan.featureGroups.reduce((sum, g) => sum + g.items.length, 0);
+    const isVi = locale === "vi";
 
     return (
         <section id="pricing" className="py-24 bg-bg-secondary relative overflow-hidden">
@@ -152,15 +146,29 @@ export default function Pricing() {
                     className="grid md:grid-cols-3 gap-6 lg:gap-8 items-stretch"
                 >
                     {plans.map((plan, i) => {
-                        const style = tierStyles[i];
-                        const isPro = i === 1;
+                        const style = tierStyles[i] || tierStyles[0];
+                        const isFeatured = plan.display?.isFeatured ?? false;
                         const isUltra = i === 2;
-                        const TierIcon = tierIcons[i];
-                        const featureCount = getFeatureCount(plan);
+                        const TierIcon = style.TierIcon;
+
+                        // Locale-aware fields
+                        const tagline = isVi ? plan.display?.taglineVi : plan.display?.taglineEn;
+                        const highlight = isVi ? plan.display?.highlightVi : plan.display?.highlightEn;
+                        const cta = isVi ? plan.display?.ctaVi : plan.display?.ctaEn;
+
+                        // Features for current locale
+                        const featureGroups: FeatureGroup[] = plan.features
+                            ? (isVi ? plan.features.vi : plan.features.en) || []
+                            : [];
+
+                        const featureCount = featureGroups.reduce((sum, g) => sum + g.items.length, 0);
+
+                        // Format price: 400000 → "400,000"
+                        const formattedPrice = new Intl.NumberFormat("vi-VN").format(plan.priceVnd);
 
                         return (
                             <motion.div
-                                key={i}
+                                key={plan.slug}
                                 variants={cardVariant}
                                 whileHover={{
                                     y: -8,
@@ -168,7 +176,7 @@ export default function Pricing() {
                                 }}
                                 className={`relative flex flex-col rounded-2xl border transition-all duration-300
                                     ${style.border} ${style.accent}
-                                    ${isPro
+                                    ${isFeatured
                                         ? "md:-mt-4 md:mb-0 animate-pulse-glow overflow-visible bg-[var(--glass-bg)] backdrop-blur-xl"
                                         : "bg-[var(--glass-bg)] backdrop-blur-xl"
                                     }
@@ -176,7 +184,7 @@ export default function Pricing() {
                                 `}
                             >
                                 {/* Popular badge */}
-                                {isPro && (
+                                {isFeatured && (
                                     <motion.div
                                         initial={{ scale: 0, opacity: 0 }}
                                         animate={{ scale: 1, opacity: 1 }}
@@ -192,10 +200,10 @@ export default function Pricing() {
                                     {/* Tier icon + name */}
                                     <div className="flex items-center gap-3 mb-5">
                                         <motion.div
-                                            className={`w-11 h-11 rounded-xl ${tierIconBg[i]} flex items-center justify-center`}
+                                            className={`w-11 h-11 rounded-xl ${style.iconBg} flex items-center justify-center`}
                                             whileHover={{ scale: 1.15, rotate: 10 }}
                                         >
-                                            <TierIcon className={`w-5 h-5 ${tierIconColors[i]}`} />
+                                            <TierIcon className={`w-5 h-5 ${style.iconColor}`} />
                                         </motion.div>
                                         <span className="text-xl font-bold text-text-primary tracking-wide">
                                             {plan.name}
@@ -205,7 +213,7 @@ export default function Pricing() {
                                     {/* Price */}
                                     <div className="mb-1">
                                         <span className={`text-5xl font-extrabold ${isUltra ? "text-gold" : "text-text-primary"}`}>
-                                            {t("currency")}{plan.price}
+                                            {t("currency")}{formattedPrice}
                                         </span>
                                         <span className="text-text-secondary text-sm ml-1">
                                             {t("period")}
@@ -214,7 +222,7 @@ export default function Pricing() {
 
                                     {/* Tagline */}
                                     <p className="text-text-secondary text-sm mb-4">
-                                        {plan.tagline}
+                                        {tagline || ""}
                                     </p>
 
                                     {/* Highlight badge */}
@@ -227,9 +235,9 @@ export default function Pricing() {
                                         >
                                             {featureCount} features
                                         </span>
-                                        {i > 0 && (
+                                        {i > 0 && highlight && (
                                             <span className="text-xs text-text-tertiary">
-                                                {plan.highlight}
+                                                {highlight}
                                             </span>
                                         )}
                                     </div>
@@ -241,8 +249,8 @@ export default function Pricing() {
                                 {/* Feature groups */}
                                 <div className="p-8 pt-6 flex-1 flex flex-col">
                                     <div className="space-y-5 flex-1">
-                                        {plan.featureGroups.map((fg, gi) => {
-                                            const GroupIcon = groupIconMap[fg.group] || Settings;
+                                        {featureGroups.map((fg, gi) => {
+                                            const GroupIcon = (fg.icon && iconMap[fg.icon]) || groupIconMap[fg.group] || Settings;
                                             return (
                                                 <div key={gi}>
                                                     {/* Group heading */}
@@ -277,22 +285,22 @@ export default function Pricing() {
                                     <div className="mt-auto pt-8">
                                         {i < 2 ? (
                                             <motion.button
-                                                onClick={() => handleCheckout(planIds[i])}
+                                                onClick={() => handleCheckout(plan.slug)}
                                                 disabled={loadingPlan !== null}
                                                 className={`${style.btn} text-center w-full block cursor-pointer disabled:opacity-50 !py-3.5 !text-base !font-bold !rounded-xl`}
                                                 whileHover={{ scale: 1.03 }}
                                                 whileTap={{ scale: 0.97 }}
                                             >
-                                                {loadingPlan === planIds[i] ? (
+                                                {loadingPlan === plan.slug ? (
                                                     <Loader2 className="w-5 h-5 animate-spin mx-auto" />
                                                 ) : (
-                                                    plan.cta
+                                                    cta || plan.name
                                                 )}
                                             </motion.button>
                                         ) : (
                                             <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                                                 <Link href="/contact" className={`${style.btn} text-center w-full block !py-3.5 !text-base !font-bold !rounded-xl`}>
-                                                    {plan.cta}
+                                                    {cta || plan.name}
                                                 </Link>
                                             </motion.div>
                                         )}
