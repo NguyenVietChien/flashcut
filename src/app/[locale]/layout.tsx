@@ -68,7 +68,7 @@ export default async function LocaleLayout({
                 <ThemeProvider>
                     <NextIntlClientProvider messages={messages}>
                         <AuthProvider>
-                            {!isAdmin && <Navbar />}
+                            <Navbar />
                             <main>{children}</main>
                             {!isAdmin && <Footer />}
                             {!isAdmin && <FloatSupport />}

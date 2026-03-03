@@ -69,17 +69,17 @@ export default async function AdminLayout({
     }
 
     return (
-        <div className="min-h-screen flex bg-bg-primary">
+        <div className="min-h-screen pt-16 flex bg-bg-primary">
             {/* Sidebar */}
-            <aside className="w-64 border-r border-border-default bg-bg-secondary flex flex-col">
+            <aside className="w-64 border-r border-border-default bg-bg-secondary flex flex-col sticky top-16 h-[calc(100vh-4rem)]">
                 <div className="p-6 border-b border-border-default">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-accent/20 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center">
                             <Shield className="w-5 h-5 text-accent" />
                         </div>
                         <div>
-                            <h1 className="text-sm font-bold text-text-primary">FlashCut Admin</h1>
-                            <p className="text-xs text-text-tertiary">{admin.email}</p>
+                            <h1 className="text-base font-bold text-text-primary">FlashCut Admin</h1>
+                            <p className="text-sm text-text-tertiary">{admin.email}</p>
                         </div>
                     </div>
                 </div>
@@ -89,9 +89,9 @@ export default async function AdminLayout({
                         <Link
                             key={item.label}
                             href={`/${locale}/admin${item.href}`}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors group"
+                            className="flex items-center gap-3 px-3 py-3 rounded-lg text-base text-text-secondary hover:bg-bg-hover hover:text-text-primary transition-colors group"
                         >
-                            <item.icon className="w-4 h-4 text-text-tertiary group-hover:text-accent transition-colors" />
+                            <item.icon className="w-5 h-5 text-text-tertiary group-hover:text-accent transition-colors" />
                             {t(item.label)}
                         </Link>
                     ))}
@@ -100,9 +100,9 @@ export default async function AdminLayout({
                 <div className="p-4 border-t border-border-default">
                     <Link
                         href={`/${locale}/dashboard`}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-text-tertiary hover:bg-bg-hover hover:text-text-primary transition-colors"
+                        className="flex items-center gap-3 px-3 py-3 rounded-lg text-base text-text-tertiary hover:bg-bg-hover hover:text-text-primary transition-colors"
                     >
-                        <LogOut className="w-4 h-4" />
+                        <LogOut className="w-5 h-5" />
                         {t("backToSite")}
                     </Link>
                 </div>
