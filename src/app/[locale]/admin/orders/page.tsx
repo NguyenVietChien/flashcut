@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 import { UpdateStatusButton, DeleteOrderButton } from "./components";
 import { FilterBar } from "@/components/admin/FilterBar";
+import { Pagination, PAGE_SIZE } from "@/components/admin/Pagination";
 import { Suspense } from "react";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
@@ -35,15 +36,21 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
     if (params.sort === "amount_high") orderBy = { amount: "desc" };
     if (params.sort === "amount_low") orderBy = { amount: "asc" };
 
-    const orders = await prisma.order.findMany({
-        where,
-        orderBy,
-        include: {
-            user: { select: { name: true, email: true } },
-            license: { select: { key: true, status: true } },
-        },
-        take: 100,
-    });
+    const page = Math.max(1, parseInt(params.page || "1"));
+
+    const [orders, total] = await Promise.all([
+        prisma.order.findMany({
+            where,
+            orderBy,
+            include: {
+                user: { select: { name: true, email: true } },
+                license: { select: { key: true, status: true } },
+            },
+            skip: (page - 1) * PAGE_SIZE,
+            take: PAGE_SIZE,
+        }),
+        prisma.order.count({ where }),
+    ]);
 
     const labels = {
         updateStatus: t("updateStatus"),
@@ -94,7 +101,7 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
                     { value: "amount_high", label: t("sortAmountHigh") },
                     { value: "amount_low", label: t("sortAmountLow") },
                 ]}
-                totalLabel={`${orders.length} ${t("total")}`}
+                totalLabel={`${total} ${t("total")}`}
             />
 
             <div className="glass-card overflow-hidden">
@@ -173,6 +180,8 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
                     </table>
                 </div>
             </div>
+
+            <Pagination total={total} />
         </div>
     );
 }

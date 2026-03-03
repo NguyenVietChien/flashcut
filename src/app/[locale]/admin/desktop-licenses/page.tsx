@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
 import { CreateLicenseButton, EditLicenseButton, ResetHwidButton, DeleteLicenseButton } from "./components";
 import { FilterBar } from "@/components/admin/FilterBar";
+import { Pagination, PAGE_SIZE } from "@/components/admin/Pagination";
 import { Suspense } from "react";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
@@ -57,16 +58,22 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
     if (params.sort === "oldest") orderBy = { createdAt: "asc" };
     if (params.sort === "expiring") orderBy = { expiresAt: "asc" };
 
-    const licenses = await prisma.license.findMany({
-        where,
-        orderBy,
-        include: {
-            product: true,
-            user: { select: { name: true, email: true } },
-            _count: { select: { activationLogs: true } },
-        },
-        take: 100,
-    });
+    const page = Math.max(1, parseInt(params.page || "1"));
+
+    const [licenses, total] = await Promise.all([
+        prisma.license.findMany({
+            where,
+            orderBy,
+            include: {
+                product: true,
+                user: { select: { name: true, email: true } },
+                _count: { select: { activationLogs: true } },
+            },
+            skip: (page - 1) * PAGE_SIZE,
+            take: PAGE_SIZE,
+        }),
+        prisma.license.count({ where }),
+    ]);
 
     const labels = {
         createLicense: t("createLicense"),
@@ -132,7 +139,7 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
                     { value: "oldest", label: t("sortOldest") },
                     { value: "expiring", label: t("sortExpiring") },
                 ]}
-                totalLabel={`${licenses.length} ${t("total")}`}
+                totalLabel={`${total} ${t("total")}`}
             />
 
             <div className="glass-card overflow-hidden">
@@ -229,6 +236,8 @@ async function LicensesContent({ searchParams }: { searchParams: SearchParams })
                     </table>
                 </div>
             </div>
+
+            <Pagination total={total} />
         </div>
     );
 }

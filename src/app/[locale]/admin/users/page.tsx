@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { getTranslations } from "next-intl/server";
 import { EditRoleButton, DeleteUserButton } from "./components";
 import { FilterBar } from "@/components/admin/FilterBar";
+import { Pagination, PAGE_SIZE } from "@/components/admin/Pagination";
 import { Suspense } from "react";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
@@ -32,15 +33,21 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
     let orderBy: Prisma.UserOrderByWithRelationInput = { createdAt: "desc" };
     if (params.sort === "oldest") orderBy = { createdAt: "asc" };
 
-    const users = await prisma.user.findMany({
-        where,
-        orderBy,
-        include: {
-            licenses: { select: { plan: true, status: true }, take: 1, orderBy: { activatedAt: "desc" } },
-            _count: { select: { orders: true } },
-        },
-        take: 100,
-    });
+    const page = Math.max(1, parseInt(params.page || "1"));
+
+    const [users, total] = await Promise.all([
+        prisma.user.findMany({
+            where,
+            orderBy,
+            include: {
+                licenses: { select: { plan: true, status: true }, take: 1, orderBy: { activatedAt: "desc" } },
+                _count: { select: { orders: true } },
+            },
+            skip: (page - 1) * PAGE_SIZE,
+            take: PAGE_SIZE,
+        }),
+        prisma.user.count({ where }),
+    ]);
 
     const labels = {
         editRole: t("editRole"),
@@ -73,7 +80,7 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
                     { value: "", label: t("sortNewest") },
                     { value: "oldest", label: t("sortOldest") },
                 ]}
-                totalLabel={`${users.length} ${t("total")}`}
+                totalLabel={`${total} ${t("total")}`}
             />
 
             <div className="glass-card overflow-hidden">
@@ -137,6 +144,8 @@ async function UsersContent({ searchParams }: { searchParams: SearchParams }) {
                     </table>
                 </div>
             </div>
+
+            <Pagination total={total} />
         </div>
     );
 }
