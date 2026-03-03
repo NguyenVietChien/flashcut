@@ -89,14 +89,16 @@ export default function UserMenu() {
                         {t("profile") ?? "Profile"}
                     </Link>
 
-                    <Link
-                        href="/admin"
-                        onClick={() => setOpen(false)}
-                        className="flex items-center gap-2.5 px-3 py-2 text-sm text-text-secondary hover:text-amber-400 hover:bg-bg-hover rounded-lg transition-colors"
-                    >
-                        <Shield className="w-4 h-4" />
-                        Admin
-                    </Link>
+                    {(session.user as { role?: string }).role === "admin" && (
+                        <Link
+                            href="/admin"
+                            onClick={() => setOpen(false)}
+                            className="flex items-center gap-2.5 px-3 py-2 text-sm text-text-secondary hover:text-amber-400 hover:bg-bg-hover rounded-lg transition-colors"
+                        >
+                            <Shield className="w-4 h-4" />
+                            Admin
+                        </Link>
+                    )}
 
                     <button
                         onClick={() => signOut({ callbackUrl: "/" })}
