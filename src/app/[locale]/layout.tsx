@@ -7,8 +7,8 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import FloatSupport from "@/components/layout/FloatSupport";
 import { ThemeProvider } from "@/components/layout/ThemeProvider";
-
 import AuthProvider from "@/components/auth/AuthProvider";
+import { headers } from "next/headers";
 
 const inter = Inter({
     variable: "--font-inter",
@@ -34,6 +34,11 @@ export default async function LocaleLayout({
     }
 
     const messages = await getMessages();
+
+    // Detect admin routes to hide site chrome
+    const headersList = await headers();
+    const pathname = headersList.get("x-pathname") || "";
+    const isAdmin = pathname.includes("/admin");
 
     return (
         <html lang={locale} suppressHydrationWarning>
@@ -63,11 +68,10 @@ export default async function LocaleLayout({
                 <ThemeProvider>
                     <NextIntlClientProvider messages={messages}>
                         <AuthProvider>
-
-                            <Navbar />
+                            {!isAdmin && <Navbar />}
                             <main>{children}</main>
-                            <Footer />
-                            <FloatSupport />
+                            {!isAdmin && <Footer />}
+                            {!isAdmin && <FloatSupport />}
                         </AuthProvider>
                     </NextIntlClientProvider>
                 </ThemeProvider>
@@ -75,3 +79,4 @@ export default async function LocaleLayout({
         </html>
     );
 }
+

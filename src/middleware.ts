@@ -29,7 +29,10 @@ export default async function middleware(req: NextRequest) {
         }
     }
 
-    return intlMiddleware(req);
+    const response = intlMiddleware(req);
+    // Pass pathname to layout for admin detection
+    response.headers.set("x-pathname", pathname);
+    return response;
 }
 
 export const config = {
