@@ -22,7 +22,7 @@ export async function GET(req: Request) {
         license: {
             key: order.license.key,
             plan: order.license.plan,
-            expiresAt: order.license.expiresAt.toISOString(),
+            expiresAt: order.license.expiresAt?.toISOString() || null,
         },
     });
 }

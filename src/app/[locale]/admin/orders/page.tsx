@@ -51,8 +51,8 @@ export default async function AdminOrdersPage() {
                             {orders.map((order) => (
                                 <tr key={order.id} className="hover:bg-bg-hover transition-colors">
                                     <td className="px-6 py-4">
-                                        <p className="text-sm text-text-primary font-medium">{order.user.name || "—"}</p>
-                                        <p className="text-xs text-text-tertiary">{order.user.email}</p>
+                                        <p className="text-sm text-text-primary font-medium">{order.user?.name || "—"}</p>
+                                        <p className="text-xs text-text-tertiary">{order.user?.email || order.buyerEmail || "—"}</p>
                                     </td>
                                     <td className="px-6 py-4">
                                         <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${order.plan === "ultra" ? "bg-gold/20 text-gold" :

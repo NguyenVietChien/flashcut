@@ -5,9 +5,9 @@ import { Users, Key, ShoppingCart, TrendingUp } from "lucide-react";
 export default async function AdminDashboard() {
     const t = await getTranslations("admin");
 
-    const [userCount, desktopLicenseCount, orderCount, paidOrderCount] = await Promise.all([
+    const [userCount, licenseCount, orderCount, paidOrderCount] = await Promise.all([
         prisma.user.count(),
-        prisma.desktopLicense.count(),
+        prisma.license.count(),
         prisma.order.count(),
         prisma.order.count({ where: { status: "paid" } }),
     ]);
@@ -59,7 +59,7 @@ export default async function AdminDashboard() {
 
     const cards = [
         { icon: Users, label: t("totalUsers"), value: userCount, color: "text-accent", bg: "bg-accent/10" },
-        { icon: Key, label: t("totalLicenses"), value: desktopLicenseCount, color: "text-purple-400", bg: "bg-purple-400/10" },
+        { icon: Key, label: t("totalLicenses"), value: licenseCount, color: "text-purple-400", bg: "bg-purple-400/10" },
         { icon: ShoppingCart, label: t("totalOrders"), value: orderCount, color: "text-amber-400", bg: "bg-amber-400/10" },
         { icon: TrendingUp, label: t("paidOrders"), value: paidOrderCount, color: "text-emerald-400", bg: "bg-emerald-400/10" },
     ];
@@ -177,7 +177,7 @@ export default async function AdminDashboard() {
                         {recentOrders.map((order) => (
                             <div key={order.id} className="flex items-center justify-between py-2 border-b border-border-default last:border-0">
                                 <div>
-                                    <p className="text-sm text-text-primary font-medium">{order.user.email}</p>
+                                    <p className="text-sm text-text-primary font-medium">{order.user?.email || order.buyerEmail || "—"}</p>
                                     <p className="text-xs text-text-tertiary">{order.plan.toUpperCase()} · {order.paymentMethod}</p>
                                 </div>
                                 <div className="text-right">

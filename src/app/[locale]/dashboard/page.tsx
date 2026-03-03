@@ -36,7 +36,7 @@ export default async function DashboardPage({
     ]);
 
     const currentPlan = license ? license.plan.charAt(0).toUpperCase() + license.plan.slice(1) : "Free";
-    const isExpired = license ? new Date(license.expiresAt) < new Date() : false;
+    const isExpired = license?.expiresAt ? new Date(license.expiresAt) < new Date() : false;
 
     const cards = [
         { icon: Zap, label: t("projects"), value: "0", color: "text-accent", bg: "bg-accent/10" },
@@ -101,7 +101,7 @@ export default async function DashboardPage({
                                 <div>
                                     <p className="text-text-tertiary text-xs">{t("expiresAt")}</p>
                                     <p className="text-text-primary font-medium">
-                                        {new Date(license.expiresAt).toLocaleDateString("vi-VN")}
+                                        {license.expiresAt ? new Date(license.expiresAt).toLocaleDateString("vi-VN") : "Lifetime"}
                                     </p>
                                 </div>
                             </div>
