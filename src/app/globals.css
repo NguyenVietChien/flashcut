@@ -172,17 +172,19 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Headings — tighter tracking, proper weight hierarchy */
+/* Heading typography tokens — use via text-[var(--heading-*)] in components */
+:root {
+  --heading-hero: clamp(2rem, 4vw, 3rem);      /* Landing hero only            */
+  --heading-page: clamp(1.5rem, 3vw, 2rem);     /* Page titles                  */
+  --heading-section: clamp(1.25rem, 2vw, 1.5rem);/* Section titles              */
+  --heading-card: 1.125rem;                       /* Card / panel titles         */
+}
+
+/* Headings — base rhythm only, NO font-size overrides */
 h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.025em;
   line-height: 1.2;
-  font-weight: 700;
 }
-
-h1:where(:not(.admin-layout *)) { font-size: clamp(2rem, 4vw, 3rem); }
-h2:where(:not(.admin-layout *)) { font-size: clamp(1.5rem, 3vw, 2.25rem); }
-h3:where(:not(.admin-layout *)) { font-size: clamp(1.25rem, 2.5vw, 1.5rem); font-weight: 600; }
-h4:where(:not(.admin-layout *)) { font-size: 1.125rem; font-weight: 600; }
 
 /* Paragraphs — comfortable reading */
 p {

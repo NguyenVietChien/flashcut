@@ -143,8 +143,8 @@ function BankTransferContent() {
                     className="glass-card p-6 sm:p-8"
                 >
                     <div className="flex items-center gap-3 mb-6">
-                        <Building2 className="w-6 h-6 text-accent" />
-                        <h1 className="text-xl font-bold text-text-primary">{t("title")}</h1>
+                        <Building2 className="w-5 h-5 text-accent" />
+                        <h1 className="text-lg font-semibold text-text-primary">{t("title")}</h1>
                     </div>
 
                     <div className="grid sm:grid-cols-2 gap-6">
