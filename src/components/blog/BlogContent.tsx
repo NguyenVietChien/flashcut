@@ -1,8 +1,22 @@
 import { MDXRemote } from "next-mdx-remote/rsc";
+import remarkGfm from "remark-gfm";
 
 interface BlogContentProps {
     content: string;
 }
+
+const mdxComponents = {
+    // Handle images — support both local and Cloudinary URLs
+    img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+            {...props}
+            alt={props.alt || ""}
+            loading="lazy"
+            className="rounded-xl my-6 max-w-full h-auto"
+        />
+    ),
+};
 
 export default function BlogContent({ content }: BlogContentProps) {
     return (
@@ -45,7 +59,16 @@ export default function BlogContent({ content }: BlogContentProps) {
 
             prose-img:rounded-xl prose-img:my-6
         ">
-            <MDXRemote source={content} />
+            <MDXRemote
+                source={content}
+                components={mdxComponents}
+                options={{
+                    mdxOptions: {
+                        remarkPlugins: [remarkGfm],
+                    },
+                }}
+            />
         </div>
     );
 }
+
