@@ -11,26 +11,3 @@ export function getStripe(): Stripe {
     return _stripe;
 }
 
-export const PLANS = {
-    basic: {
-        name: "Basic",
-        price: 299000,
-        currency: "vnd",
-    },
-    pro: {
-        name: "Pro",
-        price: 700000,
-        currency: "vnd",
-    },
-    ultra: {
-        name: "Ultra",
-        price: 1200000,
-        currency: "vnd",
-    },
-} as const;
-
-export type PlanId = keyof typeof PLANS;
-
-export function isValidPlan(plan: string): plan is PlanId {
-    return plan in PLANS;
-}

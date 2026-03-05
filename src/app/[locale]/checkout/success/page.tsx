@@ -6,6 +6,7 @@ import { CheckCircle, Copy, ArrowRight } from "lucide-react";
 import { Link } from "@/lib/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, Suspense } from "react";
+import { Button } from "@/components/ui/button";
 
 function CheckoutSuccessContent() {
     const t = useTranslations("checkoutSuccess");
@@ -67,13 +68,9 @@ function CheckoutSuccessContent() {
                             <code className="flex-1 text-accent font-mono text-sm sm:text-base break-all">
                                 {license.key}
                             </code>
-                            <button
-                                onClick={copyKey}
-                                className="shrink-0 p-2 hover:bg-accent/10 rounded-md transition-colors"
-                                title="Copy"
-                            >
+                            <Button variant="ghost" size="icon" onClick={copyKey} className="h-8 w-8 shrink-0" title="Copy">
                                 <Copy className={`w-4 h-4 ${copied ? "text-success" : "text-text-tertiary"}`} />
-                            </button>
+                            </Button>
                         </div>
                         <p className="text-text-tertiary text-xs mt-2">
                             {t("plan")}: <span className="text-text-primary font-medium">{license.plan.toUpperCase()}</span>
@@ -88,13 +85,17 @@ function CheckoutSuccessContent() {
                 )}
 
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                    <Link href="/dashboard" className="btn-accent flex items-center justify-center gap-2">
-                        {t("dashboard")}
-                        <ArrowRight className="w-4 h-4" />
-                    </Link>
-                    <Link href="/download" className="btn-outline">
-                        {t("download")}
-                    </Link>
+                    <Button asChild className="bg-accent text-black hover:bg-accent/90">
+                        <Link href="/dashboard" className="flex items-center gap-2">
+                            {t("dashboard")}
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    </Button>
+                    <Button asChild variant="outline">
+                        <Link href="/download">
+                            {t("download")}
+                        </Link>
+                    </Button>
                 </div>
             </motion.div>
         </main>
