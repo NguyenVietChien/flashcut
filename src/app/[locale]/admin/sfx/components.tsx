@@ -171,22 +171,20 @@ export function SfxAdminClient({
 
             {/* Controls Bar */}
             <div className="flex items-center gap-2">
-                <button
+                <Button
+                    variant={geminiKey ? "outline" : "ghost"}
+                    size="sm"
                     onClick={() => setShowGeminiKey(!showGeminiKey)}
-                    className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm transition-all ${geminiKey
-                        ? "bg-success/15 text-success border border-success/30"
-                        : "bg-bg-tertiary text-text-secondary border border-border-default hover:border-border-hover hover:text-text-primary"
-                        }`}
+                    className={geminiKey ? "bg-success/15 text-success border-success/30 hover:bg-success/25" : ""}
                 >
                     <Key className="size-3.5" /> {t.geminiKey} {geminiKey ? "✓" : ""}
-                </button>
-                <button
-                    onClick={() => setShowSearch(!showSearch)}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-bg-tertiary text-text-secondary border border-border-default hover:border-border-hover hover:text-text-primary transition-all"
-                >
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setShowSearch(!showSearch)}>
                     <Search className="size-3.5" /> {t.searchTest}
-                </button>
-                <button
+                </Button>
+                <Button
+                    variant="ghost"
+                    size="sm"
                     onClick={async () => {
                         try {
                             const res = await fetch("/api/admin/sfx/sync-pinecone", { method: "POST" });
@@ -194,10 +192,9 @@ export function SfxAdminClient({
                             alert(data.message || data.error || "Done");
                         } catch { alert("Sync failed"); }
                     }}
-                    className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm bg-bg-tertiary text-text-secondary border border-border-default hover:border-border-hover hover:text-text-primary transition-all"
                 >
                     Sync Pinecone
-                </button>
+                </Button>
             </div>
 
             {/* Gemini Key + Model Selector */}
@@ -352,15 +349,15 @@ function SfxRow({ item, t, onEdit }: { item: SfxItem; t: Labels; onEdit: (item: 
                 {item.duration_sec ? `${item.duration_sec.toFixed(1)}s` : "-"}
             </TableCell>
             <TableCell>
-                <button onClick={togglePlay} className={`action-btn ${playing ? "text-accent" : ""}`}>
+                <Button variant="ghost" size="icon" onClick={togglePlay} className={playing ? "text-accent" : ""}>
                     {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
-                </button>
+                </Button>
                 <audio ref={audioRef} src={item.cloudinary_url} onEnded={() => setPlaying(false)} preload="none" />
             </TableCell>
             <TableCell>
-                <button onClick={() => onEdit(item)} className="action-btn" title={t.editSfx}>
+                <Button variant="ghost" size="icon" onClick={() => onEdit(item)} title={t.editSfx}>
                     <Pencil className="size-4" />
-                </button>
+                </Button>
             </TableCell>
         </TableRow>
     );
@@ -487,7 +484,19 @@ function SfxDialog({
     };
 
     return (
-        <Dialog open={open} onOpenChange={(isOpen) => { if (!isOpen) onClose(); }}>
+        <Dialog open={open} onOpenChange={(isOpen) => {
+            if (!isOpen) {
+                // Cleanup orphaned Cloudinary upload if user cancels without saving
+                if (mode === "create" && cloudinaryUrl) {
+                    fetch("/api/admin/sfx/delete-upload", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ cloudinaryUrl }),
+                    }).catch(() => { }); // Fire-and-forget
+                }
+                onClose();
+            }
+        }}>
             <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle className="flex items-center gap-2">
@@ -522,16 +531,17 @@ function SfxDialog({
                                     </div>
                                 </div>
                             ) : (
-                                <button
+                                <Button
+                                    variant="outline"
                                     onClick={() => fileInputRef.current?.click()}
                                     disabled={uploading}
-                                    className="w-full flex flex-col items-center justify-center gap-2 px-4 py-10 border-2 border-dashed border-border-default rounded-xl hover:border-accent hover:bg-accent/5 transition-all text-sm text-text-tertiary group cursor-pointer"
+                                    className="w-full h-auto flex flex-col items-center justify-center gap-2 px-4 py-10 border-2 border-dashed border-border-default rounded-xl hover:border-accent hover:bg-accent/5 text-text-tertiary group"
                                 >
                                     <div className="size-12 rounded-xl bg-bg-tertiary flex items-center justify-center group-hover:bg-accent/15 transition-colors">
                                         {uploading ? <Loader2 className="size-5 animate-spin text-accent" /> : <Upload className="size-5 text-text-tertiary group-hover:text-accent transition-colors" />}
                                     </div>
-                                    <span>{uploading ? "Uploading..." : "Click to upload MP3, WAV, OGG (max 10MB)"}</span>
-                                </button>
+                                    <span className="text-sm">{uploading ? "Uploading..." : "Click to upload MP3, WAV, OGG (max 10MB)"}</span>
+                                </Button>
                             )}
                         </div>
                     )}
@@ -554,10 +564,10 @@ function SfxDialog({
 
                     {/* Gemini Analyze */}
                     {cloudinaryUrl && geminiKey && (
-                        <button
+                        <Button
                             onClick={() => handleAnalyze()}
                             disabled={analyzing}
-                            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-sm text-white transition-all disabled:opacity-50 cursor-pointer"
+                            className="w-full text-white cursor-pointer"
                             style={{
                                 background: "linear-gradient(135deg, #7c3aed, #2563eb, #0891b2)",
                                 backgroundSize: "200% 200%",
@@ -566,17 +576,19 @@ function SfxDialog({
                         >
                             {analyzing ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
                             {analyzing ? t.analyzing : t.analyze}
-                        </button>
+                        </Button>
                     )}
 
                     {/* Metadata Toggle */}
-                    <button
+                    <Button
+                        variant="ghost"
+                        size="sm"
                         onClick={() => setShowMetadata(!showMetadata)}
-                        className="flex items-center gap-2 text-sm text-text-tertiary hover:text-text-primary transition-colors"
+                        className="text-text-tertiary hover:text-text-primary px-0"
                     >
                         {showMetadata ? <ChevronUp className="size-3.5" /> : <ChevronDown className="size-3.5" />}
                         Metadata
-                    </button>
+                    </Button>
 
                     {showMetadata && (
                         <div className="space-y-3 p-4 rounded-xl bg-bg-tertiary/50 border border-border-default">
@@ -744,9 +756,9 @@ function AudioMiniPlayer({ url }: { url: string }) {
 
     return (
         <>
-            <button onClick={toggle} className={`action-btn ${playing ? "text-accent" : ""}`}>
+            <Button variant="ghost" size="icon" onClick={toggle} className={playing ? "text-accent" : ""}>
                 {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
-            </button>
+            </Button>
             <audio ref={audioRef} src={url} onEnded={() => setPlaying(false)} preload="none" />
         </>
     );
