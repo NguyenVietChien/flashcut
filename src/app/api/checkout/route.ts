@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getStripe, PLANS, isValidPlan } from "@/lib/stripe";
+import { getStripe } from "@/lib/stripe";
 
 export async function POST(req: Request) {
     try {
@@ -11,19 +11,28 @@ export async function POST(req: Request) {
         }
 
         const { plan } = await req.json();
-        if (!plan || !isValidPlan(plan)) {
+        if (!plan) {
             return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
         }
 
-        const planConfig = PLANS[plan];
+        // Fetch price from DB instead of hardcoded constant
+        const planRecord = await prisma.plan.findFirst({
+            where: { slug: plan, isActive: true },
+            select: { name: true, priceVnd: true },
+        });
+
+        if (!planRecord) {
+            return NextResponse.json({ error: "Plan not found" }, { status: 404 });
+        }
+
         const appUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3001";
 
         const order = await prisma.order.create({
             data: {
                 userId: session.user.id,
                 plan,
-                amount: planConfig.price,
-                currency: planConfig.currency,
+                amount: planRecord.priceVnd,
+                currency: "vnd",
                 paymentMethod: "stripe",
             },
         });
@@ -34,12 +43,12 @@ export async function POST(req: Request) {
             line_items: [
                 {
                     price_data: {
-                        currency: planConfig.currency,
+                        currency: "vnd",
                         product_data: {
-                            name: `FlashCut ${planConfig.name} License`,
-                            description: `Gói ${planConfig.name} — 30 ngày sử dụng`,
+                            name: `FlashCut ${planRecord.name} License`,
+                            description: `Gói ${planRecord.name} — 30 ngày sử dụng`,
                         },
-                        unit_amount: planConfig.price,
+                        unit_amount: planRecord.priceVnd,
                     },
                     quantity: 1,
                 },
@@ -67,3 +76,4 @@ export async function POST(req: Request) {
         );
     }
 }
+

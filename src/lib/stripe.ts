@@ -14,7 +14,7 @@ export function getStripe(): Stripe {
 export const PLANS = {
     basic: {
         name: "Basic",
-        price: 400000,
+        price: 299000,
         currency: "vnd",
     },
     pro: {

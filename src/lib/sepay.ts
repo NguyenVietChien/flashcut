@@ -1,5 +1,3 @@
-import { PLANS, PlanId } from "./stripe";
-
 export const SEPAY_CONFIG = {
     bankName: "BIDV",
     bankBin: "970418",
@@ -23,6 +21,3 @@ export function parseSepayOrderCode(content: string): string | null {
     return match ? match[0] : null;
 }
 
-export function getPlanAmount(plan: PlanId): number {
-    return PLANS[plan].price;
-}

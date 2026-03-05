@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { isValidPlan, PLANS } from "@/lib/stripe";
 import { generateOrderCode, buildSepayQrUrl, SEPAY_CONFIG } from "@/lib/sepay";
 
 export async function POST(req: Request) {
@@ -12,19 +11,28 @@ export async function POST(req: Request) {
         }
 
         const { plan } = await req.json();
-        if (!plan || !isValidPlan(plan)) {
+        if (!plan) {
             return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
         }
 
-        const planConfig = PLANS[plan];
+        // Fetch price from DB instead of hardcoded constant
+        const planRecord = await prisma.plan.findFirst({
+            where: { slug: plan, isActive: true },
+            select: { name: true, priceVnd: true },
+        });
+
+        if (!planRecord) {
+            return NextResponse.json({ error: "Plan not found" }, { status: 404 });
+        }
+
         const orderCode = generateOrderCode();
 
         const order = await prisma.order.create({
             data: {
                 userId: session.user.id,
                 plan,
-                amount: planConfig.price,
-                currency: planConfig.currency,
+                amount: planRecord.priceVnd,
+                currency: "vnd",
                 paymentMethod: "bank_transfer",
                 stripeSessionId: orderCode,
             },
@@ -46,3 +54,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
     }
 }
+

@@ -6,6 +6,7 @@ import { Copy, CheckCircle, Clock, ArrowLeft, Building2 } from "lucide-react";
 import { Link } from "@/lib/i18n/navigation";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect, useCallback, Suspense } from "react";
+import { Button } from "@/components/ui/button";
 
 interface BankInfo {
     orderId: string;
@@ -106,9 +107,9 @@ function BankTransferContent() {
                         <p className="text-text-tertiary text-xs mb-1">{t("licenseKey")}</p>
                         <div className="flex items-center gap-2">
                             <code className="flex-1 text-accent font-mono text-sm break-all">{license.key}</code>
-                            <button onClick={() => copyText(license.key, "key")} className="p-2 hover:bg-accent/10 rounded-md">
+                            <Button variant="ghost" size="icon" onClick={() => copyText(license.key, "key")} className="h-8 w-8 shrink-0">
                                 <Copy className={`w-4 h-4 ${copied === "key" ? "text-success" : "text-text-tertiary"}`} />
-                            </button>
+                            </Button>
                         </div>
                     </div>
                     <p className="text-text-tertiary text-xs mb-8">
@@ -117,8 +118,12 @@ function BankTransferContent() {
                     </p>
 
                     <div className="flex gap-3 justify-center">
-                        <Link href="/dashboard" className="btn-accent">{t("dashboard")}</Link>
-                        <Link href="/download" className="btn-outline">{t("download")}</Link>
+                        <Button asChild className="bg-accent text-black hover:bg-accent/90">
+                            <Link href="/dashboard">{t("dashboard")}</Link>
+                        </Button>
+                        <Button asChild variant="outline">
+                            <Link href="/download">{t("download")}</Link>
+                        </Button>
                     </div>
                 </motion.div>
             </main>
@@ -191,9 +196,9 @@ function InfoRow({ label, value, onCopy, copied, highlight }: {
                 <p className="text-text-tertiary text-xs">{label}</p>
                 <p className={`font-medium text-sm ${highlight ? "text-accent" : "text-text-primary"}`}>{value}</p>
             </div>
-            <button onClick={onCopy} className="p-1.5 hover:bg-accent/10 rounded-md shrink-0">
+            <Button variant="ghost" size="icon" onClick={onCopy} className="h-7 w-7 shrink-0">
                 <Copy className={`w-3.5 h-3.5 ${copied ? "text-success" : "text-text-tertiary"}`} />
-            </button>
+            </Button>
         </div>
     );
 }
