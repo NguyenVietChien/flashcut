@@ -30,13 +30,13 @@ export async function POST(req: Request) {
             },
         });
 
-        const qrUrl = buildSepayQrUrl(planConfig.price, orderCode);
+        const qrUrl = buildSepayQrUrl(order.amount, orderCode);
 
         return NextResponse.json({
             orderId: order.id,
             orderCode,
             qrUrl,
-            amount: planConfig.price,
+            amount: order.amount,
             bankName: SEPAY_CONFIG.bankName,
             accountNumber: SEPAY_CONFIG.accountNumber,
             accountHolder: SEPAY_CONFIG.accountHolder,
