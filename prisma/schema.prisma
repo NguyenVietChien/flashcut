@@ -205,3 +205,17 @@ model SessionSecret {
 
     @@map("session_secrets")
 }
+
+// ─── Auto Update ──────────────────────────────────────────────
+
+model Release {
+    id              Int      @id @default(autoincrement())
+    version         String   @unique
+    changelog       String?
+    manifestJson    String   @map("manifest_json")
+    downloadBaseUrl String   @map("download_base_url")
+    isActive        Boolean  @default(true) @map("is_active")
+    createdAt       DateTime @default(now()) @map("created_at")
+
+    @@map("releases")
+}

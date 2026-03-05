@@ -14,6 +14,7 @@ import {
     Package,
     Menu,
     X,
+    Music,
 } from "lucide-react";
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
     { href: "/desktop-licenses", icon: Key, label: "licenses" },
     { href: "/orders", icon: ShoppingCart, label: "orders" },
     { href: "/blog", icon: FileText, label: "blog" },
+    { href: "/sfx", icon: Music, label: "sfx" },
 ];
 
 export default function AdminSidebar({
@@ -98,14 +100,14 @@ export default function AdminSidebar({
                             key={item.label}
                             href={`/${locale}/admin${item.href}`}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors group ${active
-                                    ? "bg-accent/15 text-accent font-medium"
-                                    : "text-text-secondary hover:bg-bg-hover hover:text-text-primary"
+                                ? "bg-accent/15 text-accent font-medium"
+                                : "text-text-secondary hover:bg-bg-hover hover:text-text-primary"
                                 }`}
                         >
                             <item.icon
                                 className={`w-5 h-5 transition-colors ${active
-                                        ? "text-accent"
-                                        : "text-text-tertiary group-hover:text-accent"
+                                    ? "text-accent"
+                                    : "text-text-tertiary group-hover:text-accent"
                                     }`}
                             />
                             {labels[item.label] || item.label}

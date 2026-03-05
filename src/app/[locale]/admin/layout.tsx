@@ -56,6 +56,7 @@ export default async function AdminLayout({
         licenses: t("licenses"),
         orders: t("orders"),
         blog: t("blog"),
+        sfx: t("sfx"),
         backToSite: t("backToSite"),
     };
 

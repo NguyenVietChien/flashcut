@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
+    "@libsql/client": "^0.17.0",
     "@mdxeditor/editor": "^3.52.4",
+    "@pinecone-database/pinecone": "^7.1.0",
     "@prisma/client": "^6.19.2",
     "@uiw/react-md-editor": "^4.0.11",
     "bcryptjs": "^3.0.3",
