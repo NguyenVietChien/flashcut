@@ -25,6 +25,7 @@ const navItems = [
     { href: "/orders", icon: ShoppingCart, label: "orders" },
     { href: "/blog", icon: FileText, label: "blog" },
     { href: "/sfx", icon: Music, label: "sfx" },
+    { href: "/keys", icon: Key, label: "keys" },
 ];
 
 export default function AdminSidebar({

@@ -29,7 +29,7 @@ export async function updateLicense(formData: FormData) {
         tier: formData.get("tier") as string,
         maxActivations: parseInt(formData.get("maxActivations") as string),
         usageLimit: parseInt(formData.get("usageLimit") as string),
-        status: (formData.get("status") as string) || "active",
+        status: formData.get("isActive") === "true" ? "active" : "revoked",
         email: (formData.get("email") as string) || null,
         contactInfo: (formData.get("contactInfo") as string) || null,
         note: (formData.get("note") as string) || null,

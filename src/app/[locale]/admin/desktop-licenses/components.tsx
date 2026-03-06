@@ -22,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field } from "@/components/admin/Field";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { NumberInput } from "@/components/admin/NumberInput";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog";
 
 /* ─── Create License ─── */
@@ -65,14 +67,14 @@ export function CreateLicenseButton({ labels }: { labels: Record<string, string>
                         </Select>
                     </Field>
                     <Field label={labels.maxActivations}>
-                        <Input type="number" name="maxActivations" defaultValue={1} min={1} max={10} />
+                        <NumberInput name="maxActivations" defaultValue={1} min={1} max={10} />
                     </Field>
                     <Field label={labels.usageLimit}>
-                        <Input type="number" name="usageLimit" defaultValue={-1} min={-1} />
+                        <NumberInput name="usageLimit" defaultValue={-1} min={-1} />
                         <p className="text-xs text-text-tertiary mt-1">-1 = {labels.unlimited}</p>
                     </Field>
                     <Field label={labels.expiresInDays}>
-                        <Input type="number" name="expiresInDays" defaultValue={30} min={1} />
+                        <NumberInput name="expiresInDays" defaultValue={30} min={1} />
                     </Field>
                     <DialogFooter>
                         <DialogClose asChild>
@@ -80,9 +82,9 @@ export function CreateLicenseButton({ labels }: { labels: Record<string, string>
                                 {labels.cancel}
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                        <SubmitButton className="bg-accent text-black hover:bg-accent-hover">
                             {labels.create}
-                        </Button>
+                        </SubmitButton>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -143,10 +145,10 @@ export function EditLicenseButton({
                         </Select>
                     </Field>
                     <Field label={labels.maxActivations}>
-                        <Input type="number" name="maxActivations" defaultValue={license.maxActivations} min={1} max={10} />
+                        <NumberInput name="maxActivations" defaultValue={license.maxActivations} min={1} max={10} />
                     </Field>
                     <Field label={labels.usageLimit}>
-                        <Input type="number" name="usageLimit" defaultValue={license.usageLimit} min={-1} />
+                        <NumberInput name="usageLimit" defaultValue={license.usageLimit} min={-1} />
                         <p className="text-xs text-text-tertiary mt-1">-1 = {labels.unlimited}</p>
                     </Field>
                     <Field label={labels.status}>
@@ -161,7 +163,7 @@ export function EditLicenseButton({
                         </Select>
                     </Field>
                     <Field label={labels.extendDays}>
-                        <Input type="number" name="extendDays" defaultValue={0} min={0} />
+                        <NumberInput name="extendDays" defaultValue={0} min={0} />
                         <p className="text-xs text-text-tertiary mt-1">{labels.extendDaysHint}</p>
                     </Field>
                     <DialogFooter>
@@ -170,9 +172,9 @@ export function EditLicenseButton({
                                 {labels.cancel}
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                        <SubmitButton className="bg-accent text-black hover:bg-accent-hover">
                             {labels.save}
-                        </Button>
+                        </SubmitButton>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -204,9 +206,9 @@ export function ResetHwidButton({ licenseId, labels }: { licenseId: string; labe
                     </DialogClose>
                     <form action={async (fd) => { await resetHwid(fd); setOpen(false); }}>
                         <input type="hidden" name="id" value={licenseId} />
-                        <Button type="submit" className="bg-warning text-white hover:bg-warning/90">
+                        <SubmitButton className="bg-warning text-white hover:bg-warning/90">
                             {labels.confirm}
-                        </Button>
+                        </SubmitButton>
                     </form>
                 </DialogFooter>
             </DialogContent>

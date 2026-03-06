@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { getTranslations } from "next-intl/server";
-import { UpdateStatusButton, DeleteOrderButton } from "./components";
+import { UpdateStatusButton, DeleteOrderButton, CreateOrderButton } from "./components";
 import { FilterBar } from "@/components/admin/FilterBar";
 import { Pagination } from "@/components/admin/Pagination";
 import { PAGE_SIZE } from "@/lib/constants";
@@ -64,6 +64,21 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
     ]);
 
     const labels = {
+        createOrder: t("createOrder"),
+        selectPlan: t("selectPlan"),
+        buyerEmail: t("buyerEmail"),
+        buyerEmailPlaceholder: t("buyerEmailPlaceholder"),
+        orderCreated: t("orderCreated"),
+        qrScanToPay: t("qrScanToPay"),
+        bank: t("bank"),
+        accountNumber: t("accountNumber"),
+        accountHolder: t("accountHolder"),
+        transferContent: t("transferContent"),
+        copyQrUrl: t("copyQrUrl"),
+        copiedToClipboard: t("copiedToClipboard"),
+        close: t("close"),
+        optional: t("optional"),
+        create: t("create"),
         updateStatus: t("updateStatus"),
         deleteOrder: t("deleteOrder"),
         cancel: t("cancel"),
@@ -75,12 +90,19 @@ async function OrdersContent({ searchParams }: { searchParams: SearchParams }) {
         refunded: t("refunded"),
     };
 
+    const plans = await prisma.plan.findMany({
+        where: { isActive: true },
+        select: { slug: true, name: true, priceVnd: true },
+        orderBy: { priceVnd: "asc" },
+    });
+
 
 
     return (
         <div>
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-xl font-bold text-text-primary">{t("orders")}</h1>
+                <CreateOrderButton plans={plans} labels={labels} />
             </div>
 
             <FilterBar

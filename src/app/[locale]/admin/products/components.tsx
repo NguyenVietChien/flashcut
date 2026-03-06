@@ -22,6 +22,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field } from "@/components/admin/Field";
+import { SubmitButton } from "@/components/admin/SubmitButton";
+import { NumberInput } from "@/components/admin/NumberInput";
 
 type DisplayData = {
     id: string;
@@ -126,9 +128,9 @@ export function CreateProductButton({ labels }: { labels: Record<string, string>
                                 {labels.cancel}
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                        <SubmitButton className="bg-accent text-black hover:bg-accent-hover">
                             {labels.save}
-                        </Button>
+                        </SubmitButton>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -206,9 +208,9 @@ export function EditProductButton({ product, labels }: { product: ProductData; l
                                 {labels.cancel}
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                        <SubmitButton className="bg-accent text-black hover:bg-accent-hover">
                             {labels.save}
-                        </Button>
+                        </SubmitButton>
                     </DialogFooter>
                 </form>
             </DialogContent>
@@ -252,9 +254,9 @@ export function DeleteProductButton({ product, labels }: { product: ProductData;
                         setOpen(false);
                     }}>
                         <input type="hidden" name="id" value={product.id} />
-                        <Button type="submit" variant="destructive">
+                        <SubmitButton variant="destructive">
                             {labels.confirm}
-                        </Button>
+                        </SubmitButton>
                     </form>
                 </DialogFooter>
             </DialogContent>
@@ -376,7 +378,7 @@ function PlanRow({ plan, productId, labels }: { plan: PlanData; productId: strin
                             <div className="flex items-center gap-1">
                                 <form action={async (fd) => { await deletePlan(fd); setDeleting(false); }}>
                                     <input type="hidden" name="id" value={plan.id} />
-                                    <button type="submit" className="text-xs px-1.5 py-0.5 rounded bg-error/20 text-error hover:bg-error/30 transition-colors cursor-pointer">{labels.confirm}</button>
+                                    <SubmitButton size="xs" className="bg-error/20 text-error hover:bg-error/30 transition-colors">{labels.confirm}</SubmitButton>
                                 </form>
                                 <button onClick={() => setDeleting(false)} className="text-xs px-1.5 py-0.5 rounded bg-bg-tertiary text-text-secondary cursor-pointer">{labels.cancel}</button>
                             </div>
@@ -393,7 +395,7 @@ function PlanRow({ plan, productId, labels }: { plan: PlanData; productId: strin
                 <tr>
                     <td colSpan={6} className="p-0">
                         <Dialog open={editing} onOpenChange={(v) => { if (!v) { setEditing(false); setError(null); } }}>
-                            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+                            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
                                 <DialogHeader>
                                     <DialogTitle>{labels.editPlan}</DialogTitle>
                                 </DialogHeader>
@@ -432,7 +434,7 @@ function AddPlanButton({ productId, labels }: { productId: string; labels: Recor
                     {labels.addPlan}
                 </button>
             </DialogTrigger>
-            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>{labels.addPlan}</DialogTitle>
                 </DialogHeader>
@@ -492,22 +494,22 @@ function PlanForm({
 
             <div className="grid grid-cols-2 gap-4">
                 <Field label={labels.priceVnd}>
-                    <Input name="priceVnd" type="number" required defaultValue={plan?.priceVnd} placeholder="499000" />
+                    <NumberInput name="priceVnd" required defaultValue={plan?.priceVnd} placeholder="499000" step={1000} min={0} />
                 </Field>
                 <Field label={`${labels.priceUsd} (USD)`} hint={labels.optional}>
-                    <Input name="priceUsd" type="number" defaultValue={plan?.priceUsd || ""} placeholder="20" />
+                    <NumberInput name="priceUsd" defaultValue={plan?.priceUsd || ""} placeholder="20" min={0} />
                 </Field>
             </div>
 
             <div className="grid grid-cols-3 gap-4">
                 <Field label={labels.duration} hint={labels.durationHint}>
-                    <Input name="durationDays" type="number" defaultValue={plan?.durationDays || ""} placeholder="30" />
+                    <NumberInput name="durationDays" defaultValue={plan?.durationDays || ""} placeholder="30" min={0} />
                 </Field>
                 <Field label={labels.maxActivations}>
-                    <Input name="maxActivations" type="number" defaultValue={plan?.maxActivations || 1} />
+                    <NumberInput name="maxActivations" defaultValue={plan?.maxActivations || 1} min={1} />
                 </Field>
                 <Field label={labels.usageLimit} hint={labels.usageLimitHint}>
-                    <Input name="usageLimit" type="number" defaultValue={plan?.usageLimit || ""} placeholder="∞" />
+                    <NumberInput name="usageLimit" defaultValue={plan?.usageLimit || ""} placeholder="∞" min={0} />
                 </Field>
             </div>
 
@@ -537,7 +539,7 @@ function PlanForm({
                         <Input name="emoji" defaultValue={plan?.display?.emoji || ""} placeholder="🚀" />
                     </Field>
                     <Field label="Sort Order" hint="0, 1, 2...">
-                        <Input name="sortOrder" type="number" defaultValue={plan?.display?.sortOrder ?? 0} />
+                        <NumberInput name="sortOrder" defaultValue={plan?.display?.sortOrder ?? 0} min={0} />
                     </Field>
                     <Field label="Featured">
                         <Select value={isFeatured} onValueChange={setIsFeatured}>
@@ -589,9 +591,9 @@ function PlanForm({
                         {labels.cancel}
                     </Button>
                 </DialogClose>
-                <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                <SubmitButton className="bg-accent text-black hover:bg-accent-hover">
                     {labels.save}
-                </Button>
+                </SubmitButton>
             </DialogFooter>
         </form>
     );

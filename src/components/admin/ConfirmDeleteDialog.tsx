@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -50,9 +51,9 @@ export function ConfirmDeleteDialog({
                         {Object.entries(hiddenFields).map(([name, value]) => (
                             <input key={name} type="hidden" name={name} value={value} />
                         ))}
-                        <Button type="submit" variant="destructive">
+                        <SubmitButton className="bg-error/15 text-error hover:bg-error/25 border border-error/30">
                             {labels.confirm}
-                        </Button>
+                        </SubmitButton>
                     </form>
                 </DialogFooter>
             </DialogContent>

@@ -20,6 +20,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { SubmitButton } from "@/components/admin/SubmitButton";
 import { ConfirmDeleteDialog } from "@/components/admin/ConfirmDeleteDialog";
 
 /* ─── Edit Role Button ─── */
@@ -75,9 +76,9 @@ export function EditRoleButton({
                                 {labels.cancel}
                             </Button>
                         </DialogClose>
-                        <Button type="submit" className="bg-accent text-black hover:bg-accent-hover">
+                        <SubmitButton className="bg-accent text-black hover:bg-accent-hover">
                             {labels.save}
-                        </Button>
+                        </SubmitButton>
                     </DialogFooter>
                 </form>
             </DialogContent>
